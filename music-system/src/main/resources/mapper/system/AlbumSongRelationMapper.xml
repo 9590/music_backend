@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.AlbumSongRelationMapper">
+    
+    <resultMap type="AlbumSongRelation" id="AlbumSongRelationResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="albumId"    column="album_id"    />
+        <result property="songId"    column="song_id"    />
+    </resultMap>
+
+    <sql id="selectAlbumSongRelationVo">
+        select id, create_by, create_time, update_by, update_time, remark, album_id, song_id from album_song_relation
+    </sql>
+
+    <select id="selectAlbumSongRelationList" parameterType="AlbumSongRelation" resultMap="AlbumSongRelationResult">
+        <include refid="selectAlbumSongRelationVo"/>
+        <where>  
+            <if test="albumId != null "> and album_id = #{albumId}</if>
+            <if test="songId != null "> and song_id = #{songId}</if>
+        </where>
+    </select>
+    
+    <select id="selectAlbumSongRelationById" parameterType="Long" resultMap="AlbumSongRelationResult">
+        <include refid="selectAlbumSongRelationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAlbumSongRelation" parameterType="AlbumSongRelation">
+        insert into album_song_relation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="albumId != null">album_id,</if>
+            <if test="songId != null">song_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="albumId != null">#{albumId},</if>
+            <if test="songId != null">#{songId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAlbumSongRelation" parameterType="AlbumSongRelation">
+        update album_song_relation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="albumId != null">album_id = #{albumId},</if>
+            <if test="songId != null">song_id = #{songId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAlbumSongRelationById" parameterType="Long">
+        delete from album_song_relation where id = #{id}
+    </delete>
+
+    <delete id="deleteAlbumSongRelationByIds" parameterType="String">
+        delete from album_song_relation where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

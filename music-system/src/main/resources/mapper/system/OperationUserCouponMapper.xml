@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.OperationUserCouponMapper">
+
+    <resultMap type="OperationUserCoupon" id="OperationUserCouponResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="useState"    column="use_state"    />
+        <result property="userId"    column="user_id"    />
+        <result property="couponId"    column="coupon_id"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="isLongTime"    column="is_long_time"    />
+        <result property="useTime"    column="use_time"    />
+        <result property="periodOfValidity"    column="period_of_validity"    />
+    </resultMap>
+
+    <sql id="selectOperationUserCouponVo">
+        select id, create_by, create_time, update_by, update_time, remark, end_time, use_state, user_id, coupon_id, is_delete, is_long_time, use_time, period_of_validity from operation_user_coupon
+    </sql>
+
+    <select id="selectOperationUserCouponList" parameterType="OperationUserCoupon" resultMap="OperationUserCouponResult">
+        <include refid="selectOperationUserCouponVo"/>
+        <where>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="useState != null "> and use_state = #{useState}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="couponId != null "> and coupon_id = #{couponId}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+            <if test="isLongTime != null "> and is_long_time = #{isLongTime}</if>
+            <if test="useTime != null "> and use_time = #{useTime}</if>
+            <if test="periodOfValidity != null "> and period_of_validity = #{periodOfValidity}</if>
+        </where>
+    </select>
+
+    <select id="selectOperationUserCouponById" parameterType="Long" resultMap="OperationUserCouponResult">
+        <include refid="selectOperationUserCouponVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertOperationUserCoupon" parameterType="OperationUserCoupon">
+        insert into operation_user_coupon
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="useState != null">use_state,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="couponId != null">coupon_id,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="isLongTime != null">is_long_time,</if>
+            <if test="useTime != null">use_time,</if>
+            <if test="periodOfValidity != null">period_of_validity,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="useState != null">#{useState},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="couponId != null">#{couponId},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="isLongTime != null">#{isLongTime},</if>
+            <if test="useTime != null">#{useTime},</if>
+            <if test="periodOfValidity != null">#{periodOfValidity},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOperationUserCoupon" parameterType="OperationUserCoupon">
+        update operation_user_coupon
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="useState != null">use_state = #{useState},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="couponId != null">coupon_id = #{couponId},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="isLongTime != null">is_long_time = #{isLongTime},</if>
+            <if test="useTime != null">use_time = #{useTime},</if>
+            <if test="periodOfValidity != null">period_of_validity = #{periodOfValidity},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOperationUserCouponById" parameterType="Long">
+        delete from operation_user_coupon where id = #{id}
+    </delete>
+
+    <delete id="deleteOperationUserCouponByIds" parameterType="String">
+        delete from operation_user_coupon where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.AlbumSongMapper">
+
+    <resultMap type="AlbumSong" id="AlbumSongResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="songName" column="song_name"/>
+        <result property="songEnglistName" column="song_englist_name"/>
+        <result property="songTimeMin" column="song_time_min"/>
+        <result property="songTimeSec" column="song_time_sec"/>
+        <result property="albumId" column="album_id"/>
+        <result property="songData" column="song_data"/>
+        <result property="upmPrice" column="upm_price"/>
+        <result property="songLyricUrl" column="song_lyric_url"/>
+        <result property="songPrecision" column="song_precision"/>
+        <result property="sqUrl" column="sq_url"/>
+        <result property="upmUrl" column="upm_url"/>
+        <result property="songNumber" column="song_number"/>
+        <result property="songIsrc" column="song_isrc"/>
+        <result property="deleteType"    column="delete_type"    />
+    </resultMap>
+
+    <sql id="selectAlbumSongVo">
+        select id, create_by, create_time, update_by, update_time, remark, song_name, song_englist_name, song_time_min, song_time_sec, album_id, song_data, upm_price, song_lyric_url, song_precision, sq_url, upm_url, song_number, song_isrc from album_song
+    </sql>
+
+    <select id="selectAlbumSongList" parameterType="AlbumSong" resultMap="AlbumSongResult">
+        <include refid="selectAlbumSongVo"/>
+        <where>
+            <if test="songName != null  and songName != ''">and song_name like concat('%', #{songName}, '%')</if>
+            <if test="songEnglistName != null  and songEnglistName != ''">and song_englist_name like concat('%',
+                #{songEnglistName}, '%')
+            </if>
+            <if test="songIsrc != null  and songIsrc != ''">and song_isrc = #{songIsrc}</if>
+            and delete_type = 0
+        </where>
+    </select>
+
+    <select id="selectAlbumSongListLike" parameterType="AlbumSong" resultMap="AlbumSongResult">
+        SELECT
+            a.*
+        FROM
+            album_song a
+        WHERE
+        delete_type = 0
+        <if test="songName != null">
+            AND
+                a.id IN (
+            SELECT
+                song_id
+            FROM
+                album_song_relation
+            WHERE
+            delete_type = 0 and
+                (album_id IN ( SELECT b.album_id FROM album_user b WHERE b.user_id IN ( SELECT id FROM app_user WHERE user_name LIKE concat('%', #{songName}, '%') ) ))
+            OR a.id IN ( SELECT song_id FROM album_song_relation WHERE album_id IN ( SELECT id FROM album WHERE album_name LIKE concat('%', #{songName}, '%') ) )
+            OR a.song_name LIKE concat('%', #{songName}, '%'))
+        </if>
+        <if test="params.name == null "> ORDER BY a.create_time DESC</if>
+        <if test="params.name == 'songName' ">
+            <if test="params.sort == 'asc' "> ORDER BY a.song_name </if>
+            <if test="params.sort == 'desc' "> ORDER BY a.song_name DESC </if>
+        </if>
+    </select>
+
+    <select id="selectAlbumSongById" parameterType="Long" resultMap="AlbumSongResult">
+        <include refid="selectAlbumSongVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAlbumSong" parameterType="AlbumSong">
+        insert into album_song
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="songName != null">song_name,</if>
+            <if test="songEnglistName != null">song_englist_name,</if>
+            <if test="songTimeMin != null">song_time_min,</if>
+            <if test="songTimeSec != null">song_time_sec,</if>
+            <if test="albumId != null">album_id,</if>
+            <if test="songData != null">song_data,</if>
+            <if test="upmPrice != null">upm_price,</if>
+            <if test="songLyricUrl != null">song_lyric_url,</if>
+            <if test="songPrecision != null">song_precision,</if>
+            <if test="sqUrl != null">sq_url,</if>
+            <if test="upmUrl != null">upm_url,</if>
+            <if test="songNumber != null">song_number,</if>
+            <if test="songIsrc != null">song_isrc,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="songName != null">#{songName},</if>
+            <if test="songEnglistName != null">#{songEnglistName},</if>
+            <if test="songTimeMin != null">#{songTimeMin},</if>
+            <if test="songTimeSec != null">#{songTimeSec},</if>
+            <if test="albumId != null">#{albumId},</if>
+            <if test="songData != null">#{songData},</if>
+            <if test="upmPrice != null">#{upmPrice},</if>
+            <if test="songLyricUrl != null">#{songLyricUrl},</if>
+            <if test="songPrecision != null">#{songPrecision},</if>
+            <if test="sqUrl != null">#{sqUrl},</if>
+            <if test="upmUrl != null">#{upmUrl},</if>
+            <if test="songNumber != null">#{songNumber},</if>
+            <if test="songIsrc != null">#{songIsrc},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAlbumSong" parameterType="AlbumSong">
+        update album_song
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="songName != null">song_name = #{songName},</if>
+            <if test="songEnglistName != null">song_englist_name = #{songEnglistName},</if>
+            <if test="songTimeMin != null">song_time_min = #{songTimeMin},</if>
+            <if test="songTimeSec != null">song_time_sec = #{songTimeSec},</if>
+            <if test="albumId != null">album_id = #{albumId},</if>
+            <if test="songData != null">song_data = #{songData},</if>
+            <if test="upmPrice != null">upm_price = #{upmPrice},</if>
+            <if test="songLyricUrl != null">song_lyric_url = #{songLyricUrl},</if>
+            <if test="songPrecision != null">song_precision = #{songPrecision},</if>
+            <if test="sqUrl != null">sq_url = #{sqUrl},</if>
+            <if test="upmUrl != null">upm_url = #{upmUrl},</if>
+            <if test="songNumber != null">song_number = #{songNumber},</if>
+            <if test="songIsrc != null">song_isrc = #{songIsrc},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAlbumSongById" parameterType="Long">
+        delete from album_song where id = #{id}
+    </delete>
+
+    <delete id="deleteAlbumSongByIds" parameterType="String">
+        update album_song set delete_type = !delete_type where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

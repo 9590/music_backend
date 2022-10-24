@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.UserCollectAlbumOrArticleMapper">
+    
+    <resultMap type="UserCollectAlbumOrArticle" id="UserCollectAlbumOrArticleResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="userId"    column="user_id"    />
+        <result property="passivityId"    column="passivity_id"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectUserCollectAlbumOrArticleVo">
+        select id, create_by, create_time, update_by, update_time, remark, user_id, passivity_id, type from user_collect_album_or_article
+    </sql>
+
+    <select id="selectUserCollectAlbumOrArticleList" parameterType="UserCollectAlbumOrArticle" resultMap="UserCollectAlbumOrArticleResult">
+        <include refid="selectUserCollectAlbumOrArticleVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="passivityId != null "> and passivity_id = #{passivityId}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserCollectAlbumOrArticleById" parameterType="Long" resultMap="UserCollectAlbumOrArticleResult">
+        <include refid="selectUserCollectAlbumOrArticleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserCollectAlbumOrArticle" parameterType="UserCollectAlbumOrArticle">
+        insert into user_collect_album_or_article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="passivityId != null">passivity_id,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="passivityId != null">#{passivityId},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserCollectAlbumOrArticle" parameterType="UserCollectAlbumOrArticle">
+        update user_collect_album_or_article
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="passivityId != null">passivity_id = #{passivityId},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserCollectAlbumOrArticleById" parameterType="Long">
+        delete from user_collect_album_or_article where id = #{id}
+    </delete>
+
+    <delete id="deleteUserCollectAlbumOrArticleByIds" parameterType="String">
+        delete from user_collect_album_or_article where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

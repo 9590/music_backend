@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.ContentArticleTagMapper">
+    
+    <resultMap type="ContentArticleTag" id="ContentArticleTagResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="tagName"    column="tag_name"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectContentArticleTagVo">
+        select id, create_by, create_time, update_by, update_time, remark, tag_name ,user_idfrom content_article_tag
+    </sql>
+
+    <select id="selectContentArticleTagList" parameterType="ContentArticleTag" resultMap="ContentArticleTagResult">
+        <include refid="selectContentArticleTagVo"/>
+        <where>  
+            <if test="tagName != null  and tagName != ''"> and tag_name like concat('%', #{tagName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectContentArticleTagById" parameterType="Long" resultMap="ContentArticleTagResult">
+        <include refid="selectContentArticleTagVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertContentArticleTag" parameterType="ContentArticleTag">
+        insert into content_article_tag
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="tagName != null">tag_name,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="tagName != null">#{tagName},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateContentArticleTag" parameterType="ContentArticleTag">
+        update content_article_tag
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="tagName != null">tag_name = #{tagName},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteContentArticleTagById" parameterType="Long">
+        delete from content_article_tag where id = #{id}
+    </delete>
+
+    <delete id="deleteContentArticleTagByIds" parameterType="String">
+        delete from content_article_tag where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

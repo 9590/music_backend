@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.UserCollectSongFolderMapper">
+    
+    <resultMap type="UserCollectSongFolder" id="UserCollectSongFolderResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="userId"    column="user_id"    />
+        <result property="folderName"    column="folder_name"    />
+    </resultMap>
+
+    <sql id="selectUserCollectSongFolderVo">
+        select id, create_by, create_time, update_by, update_time, remark, user_id, folder_name from user_collect_song_folder
+    </sql>
+
+    <select id="selectUserCollectSongFolderList" parameterType="UserCollectSongFolder" resultMap="UserCollectSongFolderResult">
+        <include refid="selectUserCollectSongFolderVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="folderName != null  and folderName != ''"> and folder_name like concat('%', #{folderName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectUserCollectSongFolderById" parameterType="Long" resultMap="UserCollectSongFolderResult">
+        <include refid="selectUserCollectSongFolderVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserCollectSongFolder" parameterType="UserCollectSongFolder">
+        insert into user_collect_song_folder
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="folderName != null">folder_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="folderName != null">#{folderName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserCollectSongFolder" parameterType="UserCollectSongFolder">
+        update user_collect_song_folder
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="folderName != null">folder_name = #{folderName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserCollectSongFolderById" parameterType="Long">
+        delete from user_collect_song_folder where id = #{id}
+    </delete>
+
+    <delete id="deleteUserCollectSongFolderByIds" parameterType="String">
+        delete from user_collect_song_folder where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

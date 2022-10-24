@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.ClassifyMapper">
+
+    <resultMap type="Classify" id="ClassifyResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="classifyName"    column="classify_name"    />
+        <result property="classifyType"    column="classify_type"    />
+        <result property="classifyNumber"    column="classify_number"    />
+        <result property="classifyParent"    column="classify_parent"    />
+    </resultMap>
+
+    <sql id="selectClassifyVo">
+        select id, create_by, create_time, update_by, update_time, remark, classify_name, classify_type, classify_number, classify_parent from classify
+    </sql>
+
+    <select id="selectClassifyList" parameterType="Classify" resultMap="ClassifyResult">
+        <include refid="selectClassifyVo"/>
+        <where>
+            <if test="classifyName != null  and classifyName != ''"> and classify_name like concat('%', #{classifyName}, '%')</if>
+            <if test="classifyParent != null "> and classify_parent = #{classifyParent}</if>
+            <if test="classifyType != null and classifyType != ''"> and classify_type = #{classifyType}</if>
+            <if test="classifyParent != null and classifyParent != ''"> and classify_parent = #{classifyParent}</if>
+        </where>
+        <if test="params.name == 'name'">
+            <if test="params.sort == 'asc' "> ORDER BY classify_name </if>
+            <if test="params.sort == 'desc' "> ORDER BY classify_name DESC </if>
+        </if>
+        <if test="params.name == 'number'">
+            <if test="params.sort == 'asc' "> ORDER BY classify_number </if>
+            <if test="params.sort == 'desc' "> ORDER BY classify_number DESC </if>
+        </if>
+    </select>
+
+    <select id="selectClassifyById" parameterType="Long" resultMap="ClassifyResult">
+        <include refid="selectClassifyVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertClassify" parameterType="Classify">
+        insert into classify
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="classifyName != null">classify_name,</if>
+            <if test="classifyType != null">classify_type,</if>
+            <if test="classifyNumber != null">classify_number,</if>
+            <if test="classifyParent != null">classify_parent,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="classifyName != null">#{classifyName},</if>
+            <if test="classifyType != null">#{classifyType},</if>
+            <if test="classifyNumber != null">#{classifyNumber},</if>
+            <if test="classifyParent != null">#{classifyParent},</if>
+        </trim>
+    </insert>
+
+    <update id="updateClassify" parameterType="Classify">
+        update classify
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="classifyName != null">classify_name = #{classifyName},</if>
+            <if test="classifyType != null">classify_type = #{classifyType},</if>
+            <if test="classifyNumber != null">classify_number = #{classifyNumber},</if>
+            <if test="classifyParent != null">classify_parent = #{classifyParent},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteClassifyById" parameterType="Long">
+        delete from classify where id = #{id}
+    </delete>
+
+    <delete id="deleteClassifyByIds" parameterType="String">
+        delete from classify where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

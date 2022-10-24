@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.PlayRecordMapper">
+    
+    <resultMap type="PlayRecord" id="PlayRecordResult">
+        <result property="id"    column="id"    />
+        <result property="albumId"    column="album_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="playTime"    column="play_time"    />
+    </resultMap>
+
+    <sql id="selectPlayRecordVo">
+        select id, album_id, user_id, play_time from play_record
+    </sql>
+
+    <select id="selectPlayRecordList" parameterType="PlayRecord" resultMap="PlayRecordResult">
+        <include refid="selectPlayRecordVo"/>
+        <where>  
+            <if test="albumId != null "> and album_id = #{albumId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="playTime != null "> and play_time = #{playTime}</if>
+            <if test="params.type == 1 "> and DATE_SUB(CURDATE(), INTERVAL 7 DAY) <![CDATA[<= ]]> date(play_time)</if>
+        </where>
+        order by play_time desc
+    </select>
+    
+    <select id="selectPlayRecordById" parameterType="Long" resultMap="PlayRecordResult">
+        <include refid="selectPlayRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPlayRecord" parameterType="PlayRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into play_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="albumId != null">album_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="playTime != null">play_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="albumId != null">#{albumId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="playTime != null">#{playTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePlayRecord" parameterType="PlayRecord">
+        update play_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="albumId != null">album_id = #{albumId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="playTime != null">play_time = #{playTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePlayRecordById" parameterType="Long">
+        delete from play_record where id = #{id}
+    </delete>
+
+    <delete id="deletePlayRecordByIds" parameterType="String">
+        delete from play_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

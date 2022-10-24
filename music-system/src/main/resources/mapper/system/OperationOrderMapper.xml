@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.OperationOrderMapper">
+
+    <resultMap type="OperationOrder" id="OperationOrderResult">
+        <result property="id" column="id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="payNumber" column="pay_number"/>
+        <result property="payType" column="pay_type"/>
+        <result property="shopType" column="shop_type"/>
+        <result property="shopName" column="shop_name"/>
+        <result property="shopId" column="shop_id"/>
+        <result property="shopPrice" column="shop_price"/>
+        <result property="writer" column="writer"/>
+        <result property="userId" column="user_id"/>
+        <result property="payState" column="pay_state"/>
+        <result property="tradeNo" column="trade_no"/>
+        <result property="type" column="type"/>
+    </resultMap>
+
+    <sql id="selectOperationOrderVo">
+        select id, create_by, create_time, update_by, update_time, remark, pay_number, pay_type, shop_type, shop_name, shop_id,trade_no, shop_price, writer,type, user_id,pay_state from operation_order
+    </sql>
+
+    <select id="selectOperationOrderList" parameterType="OperationOrder" resultMap="OperationOrderResult">
+        <include refid="selectOperationOrderVo"/>
+        <where>
+            <if test="payNumber != null  and payNumber != ''">and pay_number = #{payNumber}</if>
+            <if test="payType != null ">and pay_type = #{payType}</if>
+            <if test="shopType != null ">and shop_type = #{shopType}</if>
+            <if test="shopName != null  and shopName != ''">and shop_name like concat('%', #{shopName}, '%')</if>
+            <if test="shopId != null ">and shop_id = #{shopId}</if>
+            <if test="shopPrice != null ">and shop_price = #{shopPrice}</if>
+            <if test="writer != null  and writer != ''">and writer = #{writer}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="type != null ">and type = #{type}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
+                and create_time between #{params.beginCreateTime} and #{params.endCreateTime}
+            </if>
+            <if test="remark != null">
+                AND (id LIKE concat('%', #{remark}, '%')
+                OR shop_name LIKE concat('%', #{remark}, '%'))
+            </if>
+        </where>
+        <if test="params.name == null "> ORDER BY create_time DESC</if>
+        <if test="params.name == 'payNumber' ">
+            <if test="params.sort == 'asc' "> ORDER BY pay_number </if>
+            <if test="params.sort == 'desc' "> ORDER BY pay_number DESC </if>
+        </if>
+        <if test="params.name == 'payType' ">
+            <if test="params.sort == 'asc' "> ORDER BY pay_type </if>
+            <if test="params.sort == 'desc' "> ORDER BY pay_type DESC </if>
+        </if>
+        <if test="params.name == 'shopPrice' ">
+            <if test="params.sort == 'asc' "> ORDER BY shop_price </if>
+            <if test="params.sort == 'desc' "> ORDER BY shop_price DESC </if>
+        </if>
+        <if test="params.name == 'tradeNo' ">
+            <if test="params.sort == 'asc' "> ORDER BY trade_no </if>
+            <if test="params.sort == 'desc' "> ORDER BY trade_no DESC </if>
+        </if>
+        <if test="params.name == 'createTime' ">
+            <if test="params.sort == 'asc' "> ORDER BY create_time </if>
+            <if test="params.sort == 'desc' "> ORDER BY create_time DESC </if>
+        </if>
+    </select>
+
+    <select id="selectOperationOrderById" parameterType="Long" resultMap="OperationOrderResult">
+        <include refid="selectOperationOrderVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertOperationOrder" parameterType="OperationOrder">
+        insert into operation_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="payNumber != null">pay_number,</if>
+            <if test="payType != null">pay_type,</if>
+            <if test="shopType != null">shop_type,</if>
+            <if test="shopName != null">shop_name,</if>
+            <if test="shopId != null">shop_id,</if>
+            <if test="shopPrice != null">shop_price,</if>
+            <if test="writer != null">writer,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="tradeNo != null">trade_no,</if>
+            <if test="type != null">type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="payNumber != null">#{payNumber},</if>
+            <if test="payType != null">#{payType},</if>
+            <if test="shopType != null">#{shopType},</if>
+            <if test="shopName != null">#{shopName},</if>
+            <if test="shopId != null">#{shopId},</if>
+            <if test="shopPrice != null">#{shopPrice},</if>
+            <if test="writer != null">#{writer},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="tradeNo != null">#{tradeNo},</if>
+            <if test="type != null">#{type},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOperationOrder" parameterType="OperationOrder">
+        update operation_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="payNumber != null">pay_number = #{payNumber},</if>
+            <if test="payType != null">pay_type = #{payType},</if>
+            <if test="shopType != null">shop_type = #{shopType},</if>
+            <if test="shopName != null">shop_name = #{shopName},</if>
+            <if test="shopId != null">shop_id = #{shopId},</if>
+            <if test="shopPrice != null">shop_price = #{shopPrice},</if>
+            <if test="writer != null">writer = #{writer},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="tradeNo != null">trade_no = #{tradeNo},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOperationOrderById" parameterType="Long">
+        delete from operation_order where id = #{id}
+    </delete>
+
+    <delete id="deleteOperationOrderByIds" parameterType="String">
+        delete from operation_order where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.AppUserMapper">
+
+    <resultMap type="AppUser" id="AppUserResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="userAccount"    column="user_account"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userAvatar"    column="user_avatar"    />
+        <result property="userLevel"    column="user_level"    />
+        <result property="userExp"    column="user_exp"    />
+        <result property="userVipState"    column="user_vip_state"    />
+        <result property="lastLoginTime"    column="last_login_time"    />
+        <result property="password"    column="password"    />
+        <result property="userType"    column="user_type"    />
+        <result property="sex"    column="sex"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="shippingAddress"    column="shipping_address"    />
+        <result property="cityName"    column="city_name"    />
+        <result property="areaName"    column="area_name"    />
+        <result property="wxOpenid"    column="wx_openid"    />
+        <result property="qqLogin"    column="qq_login"    />
+        <result property="wbLogin"    column="wb_login"    />
+    </resultMap>
+
+    <sql id="selectAppUserVo">
+        select id, create_by, create_time, update_by, update_time, remark, user_account, user_name, user_avatar, user_level, user_exp, user_vip_state, last_login_time, password, user_type, sex, birthday, shipping_address, city_name, area_name, wx_openid, qq_login, wb_login from app_user
+    </sql>
+    <sql id="selectAppUserVo2">
+        select id, create_by, create_time, update_by, update_time, remark, user_account, user_name, user_avatar, user_level, user_exp, user_vip_state, last_login_time, user_type, sex, birthday, shipping_address, city_name, area_name, wx_openid, qq_login, wb_login from app_user
+    </sql>
+
+    <select id="selectAppUserList" parameterType="AppUser" resultMap="AppUserResult">
+        <include refid="selectAppUserVo2"/>
+        <where>
+            <if test="userName != null  and userName != ''">
+             and (user_name like concat('%', #{userName}, '%')
+             or user_account like concat('%', #{userName}, '%'))
+             </if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="birthday != null "> and birthday = #{birthday}</if>
+            <if test="shippingAddress != null  and shippingAddress != ''"> and shipping_address = #{shippingAddress}</if>
+            <if test="userType != null  and userType != ''"> and user_type = #{userType}</if>
+            <if test="cityName != null  and cityName != ''"> and city_name like concat('%', #{cityName}, '%')</if>
+            <if test="areaName != null  and areaName != ''"> and area_name like concat('%', #{areaName}, '%')</if>
+            <if test="wxOpenid != null  and wxOpenid != ''"> and wx_openid = #{wxOpenid}</if>
+            <if test="qqLogin != null  and qqLogin != ''"> and qq_login = #{qqLogin}</if>
+            <if test="wbLogin != null  and wbLogin != ''"> and wb_login = #{wbLogin}</if>
+        </where>
+        <if test="params.name == 'userAccount' ">
+            <if test="params.sort == 'asc' "> ORDER BY user_account </if>
+            <if test="params.sort == 'desc' "> ORDER BY user_account DESC </if>
+        </if>
+        <if test="params.name == 'userName' ">
+            <if test="params.sort == 'asc' "> ORDER BY user_name </if>
+            <if test="params.sort == 'desc' "> ORDER BY user_name DESC </if>
+        </if>
+        <if test="params.name == 'userLevel' ">
+            <if test="params.sort == 'asc' "> ORDER BY user_level </if>
+            <if test="params.sort == 'desc' "> ORDER BY user_level DESC </if>
+        </if>
+        <if test="params.name == 'userExp' ">
+            <if test="params.sort == 'asc' "> ORDER BY user_exp </if>
+            <if test="params.sort == 'desc' "> ORDER BY user_exp DESC </if>
+        </if>
+        <if test="params.name == 'createTime' ">
+            <if test="params.sort == 'asc' "> ORDER BY create_time </if>
+            <if test="params.sort == 'desc' "> ORDER BY create_time DESC </if>
+        </if>
+        <if test="params.name == 'lastLoginTime' ">
+            <if test="params.sort == 'asc' "> ORDER BY last_login_time </if>
+            <if test="params.sort == 'desc' "> ORDER BY last_login_time DESC </if>
+        </if>
+    </select>
+
+    <select id="selectAppUserById" parameterType="Long" resultMap="AppUserResult">
+        <include refid="selectAppUserVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAppUser" parameterType="AppUser">
+        insert into app_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="userAccount != null">user_account,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="userAvatar != null">user_avatar,</if>
+            <if test="userLevel != null">user_level,</if>
+            <if test="userExp != null">user_exp,</if>
+            <if test="userVipState != null">user_vip_state,</if>
+            <if test="lastLoginTime != null">last_login_time,</if>
+            <if test="password != null">password,</if>
+            <if test="userType != null">user_type,</if>
+            <if test="sex != null">sex,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="shippingAddress != null">shipping_address,</if>
+            <if test="cityName != null">city_name,</if>
+            <if test="areaName != null">area_name,</if>
+            <if test="wxOpenid != null">wx_openid,</if>
+            <if test="qqLogin != null">qq_login,</if>
+            <if test="wbLogin != null">wb_login,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="userAccount != null">#{userAccount},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="userAvatar != null">#{userAvatar},</if>
+            <if test="userLevel != null">#{userLevel},</if>
+            <if test="userExp != null">#{userExp},</if>
+            <if test="userVipState != null">#{userVipState},</if>
+            <if test="lastLoginTime != null">#{lastLoginTime},</if>
+            <if test="password != null">#{password},</if>
+            <if test="userType != null">#{userType},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="shippingAddress != null">#{shippingAddress},</if>
+            <if test="cityName != null">#{cityName},</if>
+            <if test="areaName != null">#{areaName},</if>
+            <if test="wxOpenid != null">#{wxOpenid},</if>
+            <if test="qqLogin != null">#{qqLogin},</if>
+            <if test="wbLogin != null">#{wbLogin},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAppUser" parameterType="AppUser">
+        update app_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="userAccount != null">user_account = #{userAccount},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userAvatar != null">user_avatar = #{userAvatar},</if>
+            <if test="userLevel != null">user_level = #{userLevel},</if>
+            <if test="userExp != null">user_exp = #{userExp},</if>
+            <if test="userVipState != null">user_vip_state = #{userVipState},</if>
+            <if test="lastLoginTime != null">last_login_time = #{lastLoginTime},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="userType != null">user_type = #{userType},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="shippingAddress != null">shipping_address = #{shippingAddress},</if>
+            <if test="cityName != null">city_name = #{cityName},</if>
+            <if test="areaName != null">area_name = #{areaName},</if>
+            <if test="wxOpenid != null">wx_openid = #{wxOpenid},</if>
+            <if test="qqLogin != null">qq_login = #{qqLogin},</if>
+            <if test="wbLogin != null">wb_login = #{wbLogin},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAppUserById" parameterType="Long">
+        delete from app_user where id = #{id}
+    </delete>
+
+    <delete id="deleteAppUserByIds" parameterType="String">
+        delete from app_user where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

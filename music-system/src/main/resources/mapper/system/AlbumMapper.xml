@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.AlbumMapper">
+
+    <resultMap type="Album" id="AlbumResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="albumName"    column="album_name"    />
+        <result property="albumEnglishName"    column="album_english_name"    />
+        <result property="albumNumber"    column="album_number"    />
+        <result property="albumClassifyId"    column="album_classify_id"    />
+        <result property="albumPrice"    column="album_price"    />
+        <result property="buyUrl"    column="buy_url"    />
+        <result property="participateArtist"    column="participate_artist"    />
+        <result property="albumIntroduce"    column="album_introduce"    />
+        <result property="productionData"    column="production_data"    />
+        <result property="includeSong"    column="include_song"    />
+        <result property="albumEan"    column="album_ean"    />
+        <result property="issueTime"    column="issue_time"    />
+        <result property="deleteType"    column="delete_type"    />
+        <result property="imgUrl"    column="img_url"    />
+    </resultMap>
+
+    <sql id="selectAlbumVo">
+        select id, create_by, create_time, update_by, update_time, remark, album_name, album_english_name, album_number, album_classify_id, album_price, buy_url, participate_artist, album_introduce, production_data, include_song,img_url, album_ean, issue_time from album
+    </sql>
+
+    <select id="selectAlbumList" parameterType="Album" resultMap="AlbumResult">
+        <include refid="selectAlbumVo"/>
+        <where>
+            <if test="albumName != null  and albumName != ''"> and album_name like concat('%', #{albumName}, '%')</if>
+            <if test="albumEnglishName != null  and albumEnglishName != ''"> and album_english_name like concat('%', #{albumEnglishName}, '%')</if>
+            <if test="issueTime != null "> and issue_time = #{issueTime}</if>
+            <if test="params.userId != null "> and id IN (SELECT passivity_id FROM user_collect_album_or_article WHERE user_id = #{params.userId} AND type = '1')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
+                and issue_time between #{params.beginCreateTime} and #{params.endCreateTime}
+            </if>
+            and delete_type = 0
+        </where>
+        <if test="params.name == 'albumName' ">
+            <if test="params.sort == 'asc' "> ORDER BY album_name </if>
+            <if test="params.sort == 'desc' "> ORDER BY album_name DESC </if>
+        </if>
+        <if test="params.name == 'issueTime' ">
+            <if test="params.sort == 'asc' "> ORDER BY issue_time </if>
+            <if test="params.sort == 'desc' "> ORDER BY issue_time DESC </if>
+        </if>
+        <if test="params.name == 'albumPrice' ">
+            <if test="params.sort == 'asc' "> ORDER BY album_price </if>
+            <if test="params.sort == 'desc' "> ORDER BY album_price DESC </if>
+        </if>
+    </select>
+
+    <select id="selectAlbumListLike" parameterType="Album" resultMap="AlbumResult">
+        SELECT
+            a.*
+        FROM
+            album a
+        WHERE
+            a.delete_type = 0
+        <if test="albumClassifyId != null  and albumClassifyId != ''">
+            AND a.album_classify_id IN ((SELECT id FROM classify WHERE  classify_parent = #{albumClassifyId}),#{albumClassifyId})
+        </if>
+        <if test="albumName != null  and albumName != ''">
+            AND (
+                a.id IN ( SELECT b.album_id FROM album_user b WHERE b.user_id IN ( SELECT id FROM app_user WHERE user_name LIKE concat('%', #{albumName}, '%') ) )
+            OR a.album_name LIKE concat('%', #{albumName}, '%')
+            )
+        </if>
+        <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
+            AND a.create_time between #{params.beginCreateTime} and #{params.endCreateTime}
+        </if>
+        <if test="params.name == 'albumName' ">
+            <if test="params.sort == 'asc' "> ORDER BY a.album_name </if>
+            <if test="params.sort == 'desc' "> ORDER BY a.album_name DESC </if>
+        </if>
+        <if test="params.name == 'issueTime' ">
+            <if test="params.sort == 'asc' "> ORDER BY a.issue_time </if>
+            <if test="params.sort == 'desc' "> ORDER BY a.issue_time DESC </if>
+        </if>
+        <if test="params.name == 'albumPrice' ">
+            <if test="params.sort == 'asc' "> ORDER BY a.album_price </if>
+            <if test="params.sort == 'desc' "> ORDER BY a.album_price DESC </if>
+        </if>
+    </select>
+
+
+    <select id="selectAlbumById" parameterType="Long" resultMap="AlbumResult">
+        <include refid="selectAlbumVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAlbum" parameterType="Album">
+        insert into album
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="albumName != null">album_name,</if>
+            <if test="albumEnglishName != null">album_english_name,</if>
+            <if test="albumNumber != null">album_number,</if>
+            <if test="albumClassifyId != null">album_classify_id,</if>
+            <if test="albumPrice != null">album_price,</if>
+            <if test="buyUrl != null">buy_url,</if>
+            <if test="participateArtist != null">participate_artist,</if>
+            <if test="albumIntroduce != null">album_introduce,</if>
+            <if test="productionData != null">production_data,</if>
+            <if test="includeSong != null">include_song,</if>
+            <if test="albumEan != null">album_ean,</if>
+            <if test="issueTime != null">issue_time,</if>
+            <if test="imgUrl != null">img_url,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="albumName != null">#{albumName},</if>
+            <if test="albumEnglishName != null">#{albumEnglishName},</if>
+            <if test="albumNumber != null">#{albumNumber},</if>
+            <if test="albumClassifyId != null">#{albumClassifyId},</if>
+            <if test="albumPrice != null">#{albumPrice},</if>
+            <if test="buyUrl != null">#{buyUrl},</if>
+            <if test="participateArtist != null">#{participateArtist},</if>
+            <if test="albumIntroduce != null">#{albumIntroduce},</if>
+            <if test="productionData != null">#{productionData},</if>
+            <if test="includeSong != null">#{includeSong},</if>
+            <if test="albumEan != null">#{albumEan},</if>
+            <if test="issueTime != null">#{issueTime},</if>
+            <if test="imgUrl != null">#{imgUrl},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAlbum" parameterType="Album">
+        update album
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="albumName != null">album_name = #{albumName},</if>
+            <if test="albumEnglishName != null">album_english_name = #{albumEnglishName},</if>
+            <if test="albumNumber != null">album_number = #{albumNumber},</if>
+            <if test="albumClassifyId != null">album_classify_id = #{albumClassifyId},</if>
+            <if test="albumPrice != null">album_price = #{albumPrice},</if>
+            <if test="buyUrl != null">buy_url = #{buyUrl},</if>
+            <if test="participateArtist != null">participate_artist = #{participateArtist},</if>
+            <if test="albumIntroduce != null">album_introduce = #{albumIntroduce},</if>
+            <if test="productionData != null">production_data = #{productionData},</if>
+            <if test="includeSong != null">include_song = #{includeSong},</if>
+            <if test="albumEan != null">album_ean = #{albumEan},</if>
+            <if test="issueTime != null">issue_time = #{issueTime},</if>
+            <if test="imgUrl != null">img_url = #{imgUrl},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAlbumById" parameterType="Long">
+        delete from album where id = #{id}
+    </delete>
+
+    <delete id="deleteAlbumByIds" parameterType="String">
+        update album set delete_type = !delete_type where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectAlbumListByArticleId" parameterType="Long" resultMap="AlbumResult">
+        SELECT * FROM album WHERE id IN (SELECT album_id FROM article_album WHERE article_id = #{articleId}) and delete_type = 0
+    </select>
+</mapper>

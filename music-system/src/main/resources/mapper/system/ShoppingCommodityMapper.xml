@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.ShoppingCommodityMapper">
+
+    <resultMap type="ShoppingCommodity" id="ShoppingCommodityResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="shopName"    column="shop_name"    />
+        <result property="classifyId"    column="classify_id"    />
+        <result property="shopPrice"    column="shop_price"    />
+        <result property="shopContent"    column="shop_content"    />
+        <result property="shopIsTop"    column="shop_is_top"    />
+        <result property="shopUrl"    column="shop_url"    />
+        <result property="shopImg"    column="shop_img"    />
+        <result property="shopNumber"    column="shop_number"    />
+    </resultMap>
+
+    <sql id="selectShoppingCommodityVo">
+        select id, create_by, create_time, update_by, update_time, remark, shop_name, classify_id, shop_price, shop_content, shop_is_top, shop_url, shop_img, shop_number from shopping_commodity
+    </sql>
+
+    <select id="selectShoppingCommodityList" parameterType="ShoppingCommodity" resultMap="ShoppingCommodityResult">
+        <include refid="selectShoppingCommodityVo"/>
+        <where>
+            <if test="shopName != null  and shopName != ''"> and shop_name like concat('%', #{shopName}, '%')</if>
+            <if test="shopNumber != null  and shopNumber != ''"> and shop_number = #{shopNumber}</if>
+            <if test="shopIsTop != null "> and shop_is_top = #{shopIsTop}</if>
+            <if test="classifyId != null  and classifyId != ''"> and classify_id = #{classifyId}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
+                and create_time between #{params.beginCreateTime} and #{params.endCreateTime}
+            </if>
+        </where>
+        <if test="params.name == 'shopNumber' ">
+            <if test="params.sort == 'asc' "> ORDER BY shop_number </if>
+            <if test="params.sort == 'desc' "> ORDER BY shop_number DESC </if>
+        </if>
+        <if test="params.name == 'shopName' ">
+            <if test="params.sort == 'asc' "> ORDER BY shop_name </if>
+            <if test="params.sort == 'desc' "> ORDER BY shop_name DESC </if>
+        </if>
+        <if test="params.name == 'classifyName' ">
+            <if test="params.sort == 'asc' "> ORDER BY classify_id </if>
+            <if test="params.sort == 'desc' "> ORDER BY classify_id DESC </if>
+        </if>
+        <if test="params.name == 'shopPrice' ">
+            <if test="params.sort == 'asc' "> ORDER BY shop_price </if>
+            <if test="params.sort == 'desc' "> ORDER BY shop_price DESC </if>
+        </if>
+        <if test="params.name == 'shopIsTopName' ">
+            <if test="params.sort == 'asc' "> ORDER BY shop_is_top </if>
+            <if test="params.sort == 'desc' "> ORDER BY shop_is_top DESC </if>
+        </if>
+        <if test="params.name == 'createTime' ">
+            <if test="params.sort == 'asc' "> ORDER BY create_time </if>
+            <if test="params.sort == 'desc' "> ORDER BY create_time DESC </if>
+        </if>
+    </select>
+
+    <select id="selectShoppingCommodityById" parameterType="Long" resultMap="ShoppingCommodityResult">
+        <include refid="selectShoppingCommodityVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertShoppingCommodity" parameterType="ShoppingCommodity">
+        insert into shopping_commodity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="shopName != null">shop_name,</if>
+            <if test="classifyId != null">classify_id,</if>
+            <if test="shopPrice != null">shop_price,</if>
+            <if test="shopContent != null">shop_content,</if>
+            <if test="shopIsTop != null">shop_is_top,</if>
+            <if test="shopUrl != null">shop_url,</if>
+            <if test="shopImg != null">shop_img,</if>
+            <if test="shopNumber != null">shop_number,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="shopName != null">#{shopName},</if>
+            <if test="classifyId != null">#{classifyId},</if>
+            <if test="shopPrice != null">#{shopPrice},</if>
+            <if test="shopContent != null">#{shopContent},</if>
+            <if test="shopIsTop != null">#{shopIsTop},</if>
+            <if test="shopUrl != null">#{shopUrl},</if>
+            <if test="shopImg != null">#{shopImg},</if>
+            <if test="shopNumber != null">#{shopNumber},</if>
+        </trim>
+    </insert>
+
+    <update id="updateShoppingCommodity" parameterType="ShoppingCommodity">
+        update shopping_commodity
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="shopName != null">shop_name = #{shopName},</if>
+            <if test="classifyId != null">classify_id = #{classifyId},</if>
+            <if test="shopPrice != null">shop_price = #{shopPrice},</if>
+            <if test="shopContent != null">shop_content = #{shopContent},</if>
+            <if test="shopIsTop != null">shop_is_top = #{shopIsTop},</if>
+            <if test="shopUrl != null">shop_url = #{shopUrl},</if>
+            <if test="shopImg != null">shop_img = #{shopImg},</if>
+            <if test="shopNumber != null">shop_number = #{shopNumber},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteShoppingCommodityById" parameterType="Long">
+        delete from shopping_commodity where id = #{id}
+    </delete>
+
+    <delete id="deleteShoppingCommodityByIds" parameterType="String">
+        delete from shopping_commodity where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateTop" parameterType="Long">
+        update shopping_commodity set shop_is_top = !shop_is_top where id = #{id}
+    </update>
+</mapper>

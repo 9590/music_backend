@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.OperationAdvertisingMapper">
+    
+    <resultMap type="OperationAdvertising" id="OperationAdvertisingResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="advName"    column="adv_name"    />
+        <result property="advImgUrl"    column="adv_img_url"    />
+        <result property="advUrl"    column="adv_url"    />
+        <result property="advLocation"    column="adv_location"    />
+        <result property="advSort"    column="adv_sort"    />
+        <result property="advShow"    column="adv_show"    />
+    </resultMap>
+
+    <sql id="selectOperationAdvertisingVo">
+        select id, create_by, create_time, update_by, update_time, remark, adv_name, adv_img_url, adv_url, adv_location, adv_sort, adv_show from operation_advertising
+    </sql>
+
+    <select id="selectOperationAdvertisingList" parameterType="OperationAdvertising" resultMap="OperationAdvertisingResult">
+        <include refid="selectOperationAdvertisingVo"/>
+        <where>  
+            <if test="advName != null  and advName != ''"> and adv_name like concat('%', #{advName}, '%')</if>
+            <if test="advImgUrl != null  and advImgUrl != ''"> and adv_img_url = #{advImgUrl}</if>
+            <if test="advUrl != null  and advUrl != ''"> and adv_url = #{advUrl}</if>
+            <if test="advLocation != null "> and adv_location = #{advLocation}</if>
+            <if test="advSort != null "> and adv_sort = #{advSort}</if>
+            <if test="advShow != null "> and adv_show = #{advShow}</if>
+        </where>
+        <if test="params.name == null "> ORDER BY adv_sort</if>
+        <if test="params.name == 'createTime' ">
+         <if test="params.sort == 'asc' "> ORDER BY create_time </if>
+         <if test="params.sort == 'desc' "> ORDER BY create_time DESC </if>
+          </if>
+        <if test="params.name == 'advSort' ">
+            <if test="params.sort == 'asc' "> ORDER BY adv_sort </if>
+            <if test="params.sort == 'desc' "> ORDER BY adv_sort DESC </if>
+         </if>
+        <if test="params.name == 'advShow' ">
+            <if test="params.sort == 'asc' "> ORDER BY adv_show </if>
+            <if test="params.sort == 'desc' "> ORDER BY adv_show DESC </if>
+        </if>
+
+    </select>
+    
+    <select id="selectOperationAdvertisingById" parameterType="Long" resultMap="OperationAdvertisingResult">
+        <include refid="selectOperationAdvertisingVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOperationAdvertising" parameterType="OperationAdvertising">
+        insert into operation_advertising
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="advName != null">adv_name,</if>
+            <if test="advImgUrl != null">adv_img_url,</if>
+            <if test="advUrl != null">adv_url,</if>
+            <if test="advLocation != null">adv_location,</if>
+            <if test="advSort != null">adv_sort,</if>
+            <if test="advShow != null">adv_show,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="advName != null">#{advName},</if>
+            <if test="advImgUrl != null">#{advImgUrl},</if>
+            <if test="advUrl != null">#{advUrl},</if>
+            <if test="advLocation != null">#{advLocation},</if>
+            <if test="advSort != null">#{advSort},</if>
+            <if test="advShow != null">#{advShow},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOperationAdvertising" parameterType="OperationAdvertising">
+        update operation_advertising
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="advName != null">adv_name = #{advName},</if>
+            <if test="advImgUrl != null">adv_img_url = #{advImgUrl},</if>
+            <if test="advUrl != null">adv_url = #{advUrl},</if>
+            <if test="advLocation != null">adv_location = #{advLocation},</if>
+            <if test="advSort != null">adv_sort = #{advSort},</if>
+            <if test="advShow != null">adv_show = #{advShow},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOperationAdvertisingById" parameterType="Long">
+        delete from operation_advertising where id = #{id}
+    </delete>
+
+    <delete id="deleteOperationAdvertisingByIds" parameterType="String">
+        delete from operation_advertising where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

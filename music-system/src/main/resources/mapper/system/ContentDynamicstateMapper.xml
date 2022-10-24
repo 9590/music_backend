@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.ContentDynamicstateMapper">
+    
+    <resultMap type="ContentDynamicstate" id="ContentDynamicstateResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="userId"    column="user_id"    />
+        <result property="content"    column="content"    />
+        <result property="imgUrls"    column="img_urls"    />
+        <result property="videoUrl"    column="video_url"    />
+        <result property="issueType"    column="issue_type"    />
+    </resultMap>
+
+    <sql id="selectContentDynamicstateVo">
+        select id, create_by, create_time, update_by, update_time, remark, user_id, content, img_urls, video_url, issue_type from content_dynamicstate
+    </sql>
+
+    <select id="selectContentDynamicstateList" parameterType="ContentDynamicstate" resultMap="ContentDynamicstateResult">
+        <include refid="selectContentDynamicstateVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="imgUrls != null  and imgUrls != ''"> and img_urls = #{imgUrls}</if>
+            <if test="videoUrl != null  and videoUrl != ''"> and video_url = #{videoUrl}</if>
+            <if test="issueType != null "> and issue_type = #{issueType}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
+                and create_time between #{params.beginCreateTime} and #{params.endCreateTime}
+            </if>
+        </where>
+        <if test="params.name == 'createTime' ">
+            <if test="params.sort == 'asc' "> ORDER BY create_time </if>
+            <if test="params.sort == 'desc' "> ORDER BY create_time DESC </if>
+        </if>
+    </select>
+
+    <select id="selectContentDynamicstateListLike" parameterType="ContentDynamicstate" resultMap="ContentDynamicstateResult">
+        SELECT
+            a.*
+        FROM
+            content_dynamicstate a
+            LEFT JOIN app_user b ON a.user_id = b.id
+        WHERE 1 = 1
+        <if test="remark != null  and remark != ''">
+            and b.user_name LIKE concat('%', #{remark}, '%')
+         </if>
+        <if test="issueType != null "> and issue_type = #{issueType}</if>
+        <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
+            and a.create_time between #{params.beginCreateTime} and #{params.endCreateTime}
+        </if>
+        <if test="params.name == 'createTime' ">
+            <if test="params.sort == 'asc' "> ORDER BY a.create_time </if>
+            <if test="params.sort == 'desc' "> ORDER BY a.create_time DESC </if>
+        </if>
+    </select>
+    
+    <select id="selectContentDynamicstateById" parameterType="Long" resultMap="ContentDynamicstateResult">
+        <include refid="selectContentDynamicstateVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertContentDynamicstate" parameterType="ContentDynamicstate">
+        insert into content_dynamicstate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="content != null">content,</if>
+            <if test="imgUrls != null">img_urls,</if>
+            <if test="videoUrl != null">video_url,</if>
+            <if test="issueType != null">issue_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="imgUrls != null">#{imgUrls},</if>
+            <if test="videoUrl != null">#{videoUrl},</if>
+            <if test="issueType != null">#{issueType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateContentDynamicstate" parameterType="ContentDynamicstate">
+        update content_dynamicstate
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="imgUrls != null">img_urls = #{imgUrls},</if>
+            <if test="videoUrl != null">video_url = #{videoUrl},</if>
+            <if test="issueType != null">issue_type = #{issueType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteContentDynamicstateById" parameterType="Long">
+        delete from content_dynamicstate where id = #{id}
+    </delete>
+
+    <delete id="deleteContentDynamicstateByIds" parameterType="String">
+        delete from content_dynamicstate where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.UserSearchLogMapper">
+    
+    <resultMap type="UserSearchLog" id="UserSearchLogResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="userId"    column="user_id"    />
+        <result property="searchWord"    column="search_word"    />
+        <result property="deleteType"    column="delete_type"    />
+    </resultMap>
+
+    <sql id="selectUserSearchLogVo">
+        select id, create_by, create_time, update_by, update_time, remark, user_id, search_word, delete_type from user_search_log
+    </sql>
+
+    <select id="selectUserSearchLogList" parameterType="UserSearchLog" resultMap="UserSearchLogResult">
+        <include refid="selectUserSearchLogVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="searchWord != null "> and search_word = #{searchWord}</if>
+            <if test="deleteType != null "> and delete_type = #{deleteType}</if>
+        </where>
+    </select>
+
+    <select id="selectUserSearchLogListGroup" resultMap="UserSearchLogResult">
+        SELECT search_word,COUNT(id) as remark FROM `user_search_log` WHERE delete_type = 2 GROUP BY search_word ORDER BY remark DESC
+    </select>
+    
+    <select id="selectUserSearchLogById" parameterType="Long" resultMap="UserSearchLogResult">
+        <include refid="selectUserSearchLogVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserSearchLog" parameterType="UserSearchLog">
+        insert into user_search_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="searchWord != null">search_word,</if>
+            <if test="deleteType != null">delete_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="searchWord != null">#{searchWord},</if>
+            <if test="deleteType != null">#{deleteType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserSearchLog" parameterType="UserSearchLog">
+        update user_search_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="searchWord != null">search_word = #{searchWord},</if>
+            <if test="deleteType != null">delete_type = #{deleteType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteUserSearchLogById" parameterType="Long">
+        update user_search_log set delete_type = 1 where user_id = #{id}
+    </update>
+
+    <delete id="deleteUserSearchLogByIds" parameterType="String">
+        delete from user_search_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

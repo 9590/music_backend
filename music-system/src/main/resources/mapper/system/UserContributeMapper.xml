@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.UserContributeMapper">
+    
+    <resultMap type="UserContribute" id="UserContributeResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="title"    column="title"    />
+        <result property="userId"    column="user_id"    />
+        <result property="imgUrls"    column="img_urls"    />
+        <result property="content"    column="content"    />
+        <result property="readNum"    column="read_num"    />
+        <result property="likeNum"    column="like_num"    />
+        <result property="checkTime"    column="check_time"    />
+        <result property="checkState"    column="check_state"    />
+    </resultMap>
+
+    <sql id="selectUserContributeVo">
+        select id, create_by, create_time, update_by, update_time, remark, title, user_id, img_urls, content, read_num, like_num, check_time, check_state from user_contribute
+    </sql>
+
+    <select id="selectUserContributeList" parameterType="UserContribute" resultMap="UserContributeResult">
+        <include refid="selectUserContributeVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="imgUrls != null  and imgUrls != ''"> and img_urls = #{imgUrls}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="readNum != null "> and read_num = #{readNum}</if>
+            <if test="likeNum != null "> and like_num = #{likeNum}</if>
+            <if test="checkTime != null "> and check_time = #{checkTime}</if>
+            <if test="checkState != null "> and check_state = #{checkState}</if>
+        </where>
+    </select>
+
+    <select id="selectUserContributeListLike" parameterType="UserContribute" resultMap="UserContributeResult">
+        SELECT
+            a.*
+        FROM
+            user_contribute a
+        WHERE 1 = 1
+        <if test="checkState != null "> and a.check_state = #{checkState}</if>
+        <if test="remark != null  and remark != ''">
+            AND (
+                a.id IN ( SELECT contribute_id FROM user_contribute_album WHERE album_id IN ( SELECT id FROM album WHERE album_name like concat('%', #{remark}, '%') ) )
+                OR (
+                    a.user_id IN ( SELECT id FROM app_user WHERE user_name like concat('%', #{remark}, '%') )
+                    OR a.user_id IN ( SELECT id FROM app_user WHERE user_account like concat('%', #{remark}, '%') )
+                )
+            )
+        </if>
+    </select>
+    
+    <select id="selectUserContributeById" parameterType="Long" resultMap="UserContributeResult">
+        <include refid="selectUserContributeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserContribute" parameterType="UserContribute">
+        insert into user_contribute
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="title != null">title,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="imgUrls != null">img_urls,</if>
+            <if test="content != null">content,</if>
+            <if test="readNum != null">read_num,</if>
+            <if test="likeNum != null">like_num,</if>
+            <if test="checkTime != null">check_time,</if>
+            <if test="checkState != null">check_state,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="title != null">#{title},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="imgUrls != null">#{imgUrls},</if>
+            <if test="content != null">#{content},</if>
+            <if test="readNum != null">#{readNum},</if>
+            <if test="likeNum != null">#{likeNum},</if>
+            <if test="checkTime != null">#{checkTime},</if>
+            <if test="checkState != null">#{checkState},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserContribute" parameterType="UserContribute">
+        update user_contribute
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="imgUrls != null">img_urls = #{imgUrls},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="readNum != null">read_num = #{readNum},</if>
+            <if test="likeNum != null">like_num = #{likeNum},</if>
+            <if test="checkTime != null">check_time = #{checkTime},</if>
+            <if test="checkState != null">check_state = #{checkState},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserContributeById" parameterType="Long">
+        delete from user_contribute where id = #{id}
+    </delete>
+
+    <delete id="deleteUserContributeByIds" parameterType="String">
+        delete from user_contribute where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

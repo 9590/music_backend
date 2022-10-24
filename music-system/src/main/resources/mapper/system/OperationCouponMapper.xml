@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.OperationCouponMapper">
+
+    <resultMap type="OperationCoupon" id="OperationCouponResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="couponName"    column="coupon_name"    />
+        <result property="couponDeduction"    column="coupon_deduction"    />
+        <result property="deductionRules"    column="deduction_rules"    />
+        <result property="couponState"    column="coupon_state"    />
+    </resultMap>
+
+    <sql id="selectOperationCouponVo">
+        select id, create_by, create_time, update_by, update_time, remark, coupon_name, coupon_deduction, deduction_rules, coupon_state from operation_coupon
+    </sql>
+
+    <select id="selectOperationCouponList" parameterType="OperationCoupon" resultMap="OperationCouponResult">
+        <include refid="selectOperationCouponVo"/>
+        <where>
+            <if test="couponName != null  and couponName != ''"> and coupon_name like concat('%', #{couponName}, '%')</if>
+            <if test="couponState != null">and coupon_state = #{couponState}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
+                and create_time between #{params.beginCreateTime} and #{params.endCreateTime}
+            </if>
+        </where>
+        <if test="params.name == null "> ORDER BY create_time DESC</if>
+        <if test="params.name == 'couponStateName' ">
+            <if test="params.sort == 'asc' "> ORDER BY coupon_state </if>
+            <if test="params.sort == 'desc' "> ORDER BY coupon_state DESC </if>
+        </if>
+        <if test="params.name == 'createTime' ">
+            <if test="params.sort == 'asc' "> ORDER BY create_time </if>
+            <if test="params.sort == 'desc' "> ORDER BY create_time DESC </if>
+        </if>
+        <if test="params.name == 'couponDeduction' ">
+            <if test="params.sort == 'asc' "> ORDER BY coupon_deduction </if>
+            <if test="params.sort == 'desc' "> ORDER BY coupon_deduction DESC </if>
+        </if>
+    </select>
+
+    <select id="selectOperationCouponById" parameterType="Long" resultMap="OperationCouponResult">
+        <include refid="selectOperationCouponVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertOperationCoupon" parameterType="OperationCoupon">
+        insert into operation_coupon
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="couponName != null">coupon_name,</if>
+            <if test="couponDeduction != null">coupon_deduction,</if>
+            <if test="deductionRules != null">deduction_rules,</if>
+            <if test="couponState != null">coupon_state,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="couponName != null">#{couponName},</if>
+            <if test="couponDeduction != null">#{couponDeduction},</if>
+            <if test="deductionRules != null">#{deductionRules},</if>
+            <if test="couponState != null">#{couponState},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOperationCoupon" parameterType="OperationCoupon">
+        update operation_coupon
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="couponName != null">coupon_name = #{couponName},</if>
+            <if test="couponDeduction != null">coupon_deduction = #{couponDeduction},</if>
+            <if test="deductionRules != null">deduction_rules = #{deductionRules},</if>
+            <if test="couponState != null">coupon_state = #{couponState},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOperationCouponById" parameterType="Long">
+        delete from operation_coupon where id = #{id}
+    </delete>
+
+    <delete id="deleteOperationCouponByIds" parameterType="String">
+        delete from operation_coupon where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

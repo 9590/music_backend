@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.ContentArticleMapper">
+    
+    <resultMap type="ContentArticle" id="ContentArticleResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="articleTitile"    column="article_titile"    />
+        <result property="articleType"    column="article_type"    />
+        <result property="articleTag"    column="article_tag"    />
+        <result property="articleImgurl"    column="article_imgurl"    />
+        <result property="articlePlace"    column="article_place"    />
+        <result property="articleContent"    column="article_content"    />
+        <result property="articleIsTop"    column="article_is_top"    />
+        <result property="readNum"    column="read_num"    />
+        <result property="likeNum"    column="like_num"    />
+        <result property="collectNum"    column="collect_num"    />
+        <result property="shareNum"    column="share_num"    />
+    </resultMap>
+
+    <sql id="selectContentArticleVo">
+        select id, create_by, create_time, update_by, update_time, remark, article_titile, article_type, article_tag, article_imgurl, article_place, article_content, article_is_top, read_num, like_num, collect_num, share_num from content_article
+    </sql>
+
+    <select id="selectContentArticleList" parameterType="ContentArticle" resultMap="ContentArticleResult">
+        <include refid="selectContentArticleVo"/>
+        <where>  
+            <if test="articleTitile != null  and articleTitile != ''"> and article_titile like concat('%', #{articleTitile}, '%')</if>
+            <if test="articleType != null "> and article_type = #{articleType}</if>
+            <if test="articleTag != null  and articleTag != ''"> and article_tag like concat('%', #{articleTag}, '%')</if>
+            <if test="articleImgurl != null  and articleImgurl != ''"> and article_imgurl = #{articleImgurl}</if>
+            <if test="articlePlace != null "> and article_place = #{articlePlace}</if>
+            <if test="articleContent != null  and articleContent != ''"> and article_content = #{articleContent}</if>
+            <if test="articleIsTop != null "> and article_is_top = #{articleIsTop}</if>
+            <if test="readNum != null "> and read_num = #{readNum}</if>
+            <if test="likeNum != null "> and like_num = #{likeNum}</if>
+            <if test="collectNum != null "> and collect_num = #{collectNum}</if>
+            <if test="shareNum != null "> and share_num = #{shareNum}</if>
+            <if test="params.userId != null "> and id IN (SELECT passivity_id FROM user_collect_album_or_article WHERE user_id = #{params.userId} AND type = '2')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
+                and create_time between #{params.beginCreateTime} and #{params.endCreateTime}
+            </if>
+        </where>
+        <if test="params.name == null ">
+            order by create_time DESC
+        </if>
+        <if test="params.name == 'createTime' ">
+            <if test="params.sort == 'asc' "> ORDER BY create_time </if>
+            <if test="params.sort == 'desc' "> ORDER BY create_time DESC </if>
+        </if>
+        <if test="params.name == 'articleTitile' ">
+            <if test="params.sort == 'asc' "> ORDER BY article_titile </if>
+            <if test="params.sort == 'desc' "> ORDER BY article_titile DESC </if>
+        </if>
+        <if test="params.name == 'articleTypeName' ">
+            <if test="params.sort == 'asc' "> ORDER BY article_type </if>
+            <if test="params.sort == 'desc' "> ORDER BY article_type DESC </if>
+        </if>
+        <if test="params.name == 'articleIsTopName' ">
+            <if test="params.sort == 'asc' "> ORDER BY article_is_top </if>
+            <if test="params.sort == 'desc' "> ORDER BY article_is_top DESC </if>
+        </if>
+        <if test="params.name == 'readNum' ">
+            <if test="params.sort == 'asc' "> ORDER BY read_num </if>
+            <if test="params.sort == 'desc' "> ORDER BY read_num DESC </if>
+        </if>
+    </select>
+    
+    <select id="selectContentArticleById" parameterType="Long" resultMap="ContentArticleResult">
+        <include refid="selectContentArticleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertContentArticle" parameterType="ContentArticle">
+        insert into content_article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="articleTitile != null">article_titile,</if>
+            <if test="articleType != null">article_type,</if>
+            <if test="articleTag != null">article_tag,</if>
+            <if test="articleImgurl != null">article_imgurl,</if>
+            <if test="articlePlace != null">article_place,</if>
+            <if test="articleContent != null">article_content,</if>
+            <if test="articleIsTop != null">article_is_top,</if>
+            <if test="readNum != null">read_num,</if>
+            <if test="likeNum != null">like_num,</if>
+            <if test="collectNum != null">collect_num,</if>
+            <if test="shareNum != null">share_num,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="articleTitile != null">#{articleTitile},</if>
+            <if test="articleType != null">#{articleType},</if>
+            <if test="articleTag != null">#{articleTag},</if>
+            <if test="articleImgurl != null">#{articleImgurl},</if>
+            <if test="articlePlace != null">#{articlePlace},</if>
+            <if test="articleContent != null">#{articleContent},</if>
+            <if test="articleIsTop != null">#{articleIsTop},</if>
+            <if test="readNum != null">#{readNum},</if>
+            <if test="likeNum != null">#{likeNum},</if>
+            <if test="collectNum != null">#{collectNum},</if>
+            <if test="shareNum != null">#{shareNum},</if>
+         </trim>
+    </insert>
+
+    <update id="updateContentArticle" parameterType="ContentArticle">
+        update content_article
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="articleTitile != null">article_titile = #{articleTitile},</if>
+            <if test="articleType != null">article_type = #{articleType},</if>
+            <if test="articleTag != null">article_tag = #{articleTag},</if>
+            <if test="articleImgurl != null">article_imgurl = #{articleImgurl},</if>
+            <if test="articlePlace != null">article_place = #{articlePlace},</if>
+            <if test="articleContent != null">article_content = #{articleContent},</if>
+            <if test="articleIsTop != null">article_is_top = #{articleIsTop},</if>
+            <if test="readNum != null">read_num = #{readNum},</if>
+            <if test="likeNum != null">like_num = #{likeNum},</if>
+            <if test="collectNum != null">collect_num = #{collectNum},</if>
+            <if test="shareNum != null">share_num = #{shareNum},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteContentArticleById" parameterType="Long">
+        delete from content_article where id = #{id}
+    </delete>
+
+    <delete id="deleteContentArticleByIds" parameterType="String">
+        delete from content_article where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateTop" parameterType="Long">
+        update content_article set article_is_top = !article_is_top where id = #{id}
+    </update>
+</mapper>

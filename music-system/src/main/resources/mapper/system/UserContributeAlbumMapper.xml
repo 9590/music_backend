@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.UserContributeAlbumMapper">
+    
+    <resultMap type="UserContributeAlbum" id="UserContributeAlbumResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="albumId"    column="album_id"    />
+        <result property="contributeId"    column="contribute_id"    />
+    </resultMap>
+
+    <sql id="selectUserContributeAlbumVo">
+        select id, create_by, create_time, update_by, update_time, remark, album_id, contribute_id from user_contribute_album
+    </sql>
+
+    <select id="selectUserContributeAlbumList" parameterType="UserContributeAlbum" resultMap="UserContributeAlbumResult">
+        <include refid="selectUserContributeAlbumVo"/>
+        <where>  
+            <if test="albumId != null "> and album_id = #{albumId}</if>
+            <if test="contributeId != null "> and contribute_id = #{contributeId}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserContributeAlbumById" parameterType="Long" resultMap="UserContributeAlbumResult">
+        <include refid="selectUserContributeAlbumVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserContributeAlbum" parameterType="UserContributeAlbum">
+        insert into user_contribute_album
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="albumId != null">album_id,</if>
+            <if test="contributeId != null">contribute_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="albumId != null">#{albumId},</if>
+            <if test="contributeId != null">#{contributeId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserContributeAlbum" parameterType="UserContributeAlbum">
+        update user_contribute_album
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="albumId != null">album_id = #{albumId},</if>
+            <if test="contributeId != null">contribute_id = #{contributeId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserContributeAlbumById" parameterType="Long">
+        delete from user_contribute_album where id = #{id}
+    </delete>
+
+    <delete id="deleteUserContributeAlbumByIds" parameterType="String">
+        delete from user_contribute_album where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
