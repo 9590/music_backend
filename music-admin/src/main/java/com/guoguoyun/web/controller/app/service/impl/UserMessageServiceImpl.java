@@ -145,7 +145,7 @@ public class UserMessageServiceImpl implements UserMessageService {
             AppInfoVo appInfoVo = new AppInfoVo();
             appInfoVo.setCreateTime(t.getCreateTime());
             appInfoVo.setNickName("客服小助手");
-            appInfoVo.setUserAvatar("http://119.3.58.86:8094/profile/upload/2022/06/01/a9f36a05-2267-4b25-b12a-e5df3cfb9f03.jpg");
+            appInfoVo.setUserAvatar("http://119.29.153.101:8094/profile/upload/2022/06/01/a9f36a05-2267-4b25-b12a-e5df3cfb9f03.jpg");
             appInfoVo.setContent(t.getRemark());
 
             return appInfoVo;

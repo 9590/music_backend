@@ -15,7 +15,7 @@ public class Starter {
 
         try {
 
-            URL url = new URL("http://119.3.58.86:8094/profile/upload/2022/02/18/582828ad-c50e-4ecd-a7ae-b3fa74450dc5.mp3");
+            URL url = new URL("http://119.29.153.101:8094/profile/upload/2022/02/18/582828ad-c50e-4ecd-a7ae-b3fa74450dc5.mp3");
 
             HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
 
