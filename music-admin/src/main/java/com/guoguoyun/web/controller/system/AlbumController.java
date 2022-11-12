@@ -55,7 +55,7 @@ public class AlbumController extends BaseController
     /**
      * 查询专辑管理-专辑库列表
      */
-    // @PreAuthorize("@ss.hasPermi('system:album:list')")       // postman测试时先注释掉
+    @PreAuthorize("@ss.hasPermi('system:album:list')")       // postman测试时先注释掉
     @GetMapping("/list")
     public TableDataInfo list(Album album)
     {
