@@ -443,7 +443,7 @@ export default {
     },
     // 缩略图
     handleAvatarSuccess(res, file) {
-      var url = "http://119.29.153.101:8094" + file.response.fileName;
+      var url = "http://localhost:8094" + file.response.fileName;
       this.dialogImageUrl = url;
       this.ruleForm.imgUrl = this.dialogImageUrl;
     },

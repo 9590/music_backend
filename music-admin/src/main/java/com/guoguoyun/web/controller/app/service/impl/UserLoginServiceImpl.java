@@ -122,7 +122,7 @@ public class UserLoginServiceImpl implements UserLoginService {
             user.setCreateTime(DateUtils.getNowDate());
             user.setLastLoginTime(DateUtils.getNowDate());
             user.setUserAccount(userLoginParams.getUserAccount());
-            user.setUserAvatar("http://119.29.153.101:8094/profile/upload/2022/03/01/f8344adb-0799-4e5a-9f89-b3eaae4e6e07.jpg");
+            user.setUserAvatar("http://localhost:8094/profile/upload/2022/03/01/f8344adb-0799-4e5a-9f89-b3eaae4e6e07.jpg");
             user.setUserName("果粉"+userLoginParams.getUserAccount().substring(userLoginParams.getUserAccount().length()-6));
             appUserService.save(user);
             LoginUser loginUser = new LoginUser();
