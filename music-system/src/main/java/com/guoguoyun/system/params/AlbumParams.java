@@ -50,7 +50,7 @@ public class AlbumParams extends BaseParam
 
     /** 专辑价格 */
     @Excel(name = "专辑价格")
-    @NotNull(message = "专辑价格不能为空", groups = {edit.class,add.class})
+    // @NotNull(message = "专辑价格不能为空", groups = {edit.class,add.class})
     private Double albumPrice;
 
     /** 实体购买链接 */
@@ -82,7 +82,7 @@ public class AlbumParams extends BaseParam
     /** 发行时间 */
     @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
     @Excel(name = "发行时间", width = 30, dateFormat = "yyyy-MM-dd")
-    @NotNull(message = "发行时间不能为空", groups = {edit.class,add.class})
+    // @NotNull(message = "发行时间不能为空", groups = {edit.class,add.class})
     private Date issueTime;
 
     /** 封面图片 */
