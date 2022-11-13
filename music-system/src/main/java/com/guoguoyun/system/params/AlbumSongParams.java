@@ -41,7 +41,7 @@ public class AlbumSongParams extends BaseParam
     // @NotNull(message = "乐曲时长(分)不能为空", groups = {BaseParam.edit.class,add.class})
     private Long songTimeMin;
 
-    乐曲时长(秒) 
+    /** 乐曲时长(秒) */
     @Excel(name = "乐曲时长(秒)")
     // @NotNull(message = "乐曲时长(秒)不能为空", groups = {BaseParam.edit.class,add.class})
     private Long songTimeSec;
