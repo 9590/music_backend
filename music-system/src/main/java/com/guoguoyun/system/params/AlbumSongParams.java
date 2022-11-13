@@ -78,9 +78,9 @@ public class AlbumSongParams extends BaseParam
     private String songNumber;
 
     /** isrc码 */
-    /** @Excel(name = "isrc码")
-    @NotBlank(message = "isrc码不能为空", groups = {BaseParam.edit.class,add.class})
-    private String songIsrc; */
+    @Excel(name = "isrc码")
+    // @NotBlank(message = "isrc码不能为空", groups = {BaseParam.edit.class,add.class})
+    private String songIsrc;
 
     public void setId(Long id)
     {
