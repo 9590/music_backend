@@ -38,12 +38,12 @@ public class AlbumSongParams extends BaseParam
 
     /** 乐曲时长(分) */
     @Excel(name = "乐曲时长(分)")
-    @NotNull(message = "乐曲时长(分)不能为空", groups = {BaseParam.edit.class,add.class})
+    // @NotNull(message = "乐曲时长(分)不能为空", groups = {BaseParam.edit.class,add.class})
     private Long songTimeMin;
 
-    /** 乐曲时长(秒) */
+    乐曲时长(秒) 
     @Excel(name = "乐曲时长(秒)")
-    @NotNull(message = "乐曲时长(秒)不能为空", groups = {BaseParam.edit.class,add.class})
+    // @NotNull(message = "乐曲时长(秒)不能为空", groups = {BaseParam.edit.class,add.class})
     private Long songTimeSec;
 
 
@@ -53,7 +53,7 @@ public class AlbumSongParams extends BaseParam
 
     /** UPM价格 */
     @Excel(name = "UPM价格")
-    @NotNull(message = "UPM价格不能为空", groups = {BaseParam.edit.class,add.class})
+    // @NotNull(message = "UPM价格不能为空", groups = {BaseParam.edit.class,add.class})
     private Double upmPrice;
 
     /** 歌词 */
@@ -78,9 +78,9 @@ public class AlbumSongParams extends BaseParam
     private String songNumber;
 
     /** isrc码 */
-    @Excel(name = "isrc码")
+    /** @Excel(name = "isrc码")
     @NotBlank(message = "isrc码不能为空", groups = {BaseParam.edit.class,add.class})
-    private String songIsrc;
+    private String songIsrc; */
 
     public void setId(Long id)
     {

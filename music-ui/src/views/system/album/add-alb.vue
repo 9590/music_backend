@@ -132,7 +132,7 @@
             </div>
           </div>
           <!-- TODO: -->
-          <el-form-item label="缩略图" prop="imgUrl">
+          <el-form-item label="封面图片" prop="imgUrl">
             <el-upload
               class="avatar-uploader"
               :action="uploadUrl"
@@ -145,7 +145,7 @@
             </el-upload>
             <span style="color: #c0c0c0">建议尺寸:400*400</span>
           </el-form-item>
-          <!-- <el-form-item label="缩略图" prop="imgUrl">
+          <!-- <el-form-item label="封面图片" prop="imgUrl">
             <el-upload
               :on-success="getImgUrl"
               action="#"
@@ -293,7 +293,7 @@ export default {
       //搜索内容需要的
       artData: "",
       uploadUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
-      // 缩略图
+      // 封面图片
       dialogImageUrl: "",
       dialogVisible: false,
       disabled: false,
@@ -332,24 +332,24 @@ export default {
         albumNumber: [
           { required: true, message: "请输入编号", trigger: "change" },
         ],
-        songIds: [{ required: true, message: "请添加曲目", trigger: "change" }],
+        // songIds: [{ required: true, message: "请添加曲目", trigger: "change" }],
         albumClassifyId: [
           { required: true, message: "请选择分类", trigger: "change" },
         ],
-        userIds: [
-          { required: true, message: "请选择艺人（多选）", trigger: "change" },
-        ],
-        issueTime: [{ required: true, message: "请选择时间", trigger: "blur" }],
-        upload: [
-          { required: true, message: "请选择本地曲目", trigger: "blur" },
-        ],
-        song: [{ required: true, message: "请选择本地歌词", trigger: "blur" }],
-        imgUrl: [
-          { required: true, message: "请选择本地图片", trigger: "change" },
-        ],
-        albumPrice: [
-          { required: true, message: "请输入专辑价格", trigger: "change" },
-        ],
+        // userIds: [
+        //   { required: true, message: "请选择艺人（多选）", trigger: "change" },
+        // ],
+        // issueTime: [{ required: true, message: "请选择时间", trigger: "blur" }],
+        // upload: [
+        //   { required: true, message: "请选择专辑曲目", trigger: "blur" },
+        // ],
+        // song: [{ required: true, message: "请选择本地歌词", trigger: "blur" }],
+        // imgUrl: [
+        //   { required: true, message: "请上传封面图片", trigger: "change" },
+        // ],
+        // albumPrice: [
+        //   { required: true, message: "请输入专辑价格", trigger: "change" },
+        // ],
       },
     };
   },
@@ -429,7 +429,7 @@ export default {
       const { data } = await getTreeList();
       this.positionList = data;
     },
-    // 缩略图
+    // 封面图片
     handleAvatarSuccess(res, file) {
       this.dialogImageUrl = file.response.url;
       this.ruleForm.imgUrl = this.dialogImageUrl;

@@ -132,7 +132,7 @@ export default {
         top: [{ required: true, message: "请选择是否置顶", trigger: "change" }],
         desc: [{ required: true, message: "请填写有关内容", trigger: "blur" }],
         photo: [
-          { required: true, message: "请添加至少一张缩略图", trigger: "blur" },
+          { required: true, message: "请添加至少一张封面图片", trigger: "blur" },
         ],
       },
     };

@@ -150,7 +150,7 @@
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="上传SQ音频" prop="sqUrl"
-            ><span style="color: #975252">(上传成功后SQ自动打钩)</span>
+            ><span style="color: #975252">(高格式MP3文件，上传成功后SQ自动打钩，原文件将被覆盖)</span>
             <el-upload
               class="upload-demo"
               :action="uploadFile"
@@ -165,7 +165,7 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="上传UPM音频" prop="upmUrl"
-            ><span style="color: #975252">(上传成功后UPM自动打钩)</span>
+            ><span style="color: #975252">(flac文件，上传成功后UPM自动打钩，原文件将被覆盖)</span>
             <el-upload
               class="upload-demo"
               :action="uploadFile"
@@ -250,9 +250,9 @@ export default {
         songName: [
           { required: true, message: "请输入乐曲名称", trigger: "blur" },
         ],
-        songTimeMin: [
-          { required: true, message: "请输入乐曲时长", trigger: "blur" },
-        ],
+        // songTimeMin: [
+        //  { required: true, message: "请输入乐曲时长", trigger: "blur" },
+        // ],
         time: [{ required: true, message: "请选择时间", trigger: "blur" }],
         songNumber: [
           { required: true, message: "请输入乐曲编号", trigger: "change" },

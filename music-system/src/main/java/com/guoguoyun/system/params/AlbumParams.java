@@ -45,7 +45,7 @@ public class AlbumParams extends BaseParam
 
     /** 分类id */
     @Excel(name = "分类id")
-    @NotNull(message = "分类id不能为空", groups = {edit.class,add.class})
+    // @NotNull(message = "分类id不能为空", groups = {edit.class,add.class})
     private Long albumClassifyId;
 
     /** 专辑价格 */
@@ -59,7 +59,7 @@ public class AlbumParams extends BaseParam
 
     /** 参与艺人 */
     @Excel(name = "参与艺人")
-    @NotNull(message = "参与艺人不能为空", groups = {edit.class,add.class})
+    // @NotNull(message = "参与艺人不能为空", groups = {edit.class,add.class})
     private List<Long> userIds;
 
     /** 专辑介绍 */
@@ -72,7 +72,7 @@ public class AlbumParams extends BaseParam
 
     /** 包含曲目 */
     @Excel(name = "包含曲目")
-    @NotNull(message = "包含曲目不能为空", groups = {edit.class,add.class})
+    // @NotNull(message = "包含曲目不能为空", groups = {edit.class,add.class})
     private List<Long> songIds;
 
     /** ean码 */
@@ -85,8 +85,8 @@ public class AlbumParams extends BaseParam
     @NotNull(message = "发行时间不能为空", groups = {edit.class,add.class})
     private Date issueTime;
 
-
-    @NotBlank(message = "缩略图不能为空", groups = {edit.class,add.class})
+    /** 封面图片 */
+    // @NotBlank(message = "封面图片不能为空", groups = {edit.class,add.class})
     private String imgUrl;
 
     public List<Long> getUserIds() {

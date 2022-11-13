@@ -134,7 +134,7 @@
               </div>
             </div>
           </div>
-          <el-form-item label="缩略图" prop="imgUrl">
+          <el-form-item label="封面图片" prop="imgUrl">
             <el-upload
               class="avatar-uploader"
               :action="uploadUrl"
@@ -148,7 +148,7 @@
             <span style="color: #c0c0c0">建议尺寸:400*400</span>
           </el-form-item>
           <!-- TODO: -->
-          <!-- <el-form-item label="缩略图" prop="aa">
+          <!-- <el-form-item label="封面图片" prop="aa">
             <el-upload
               action="#"
               list-type="picture-card"
@@ -297,7 +297,7 @@ export default {
       //搜索内容需要的
       artData: "",
       uploadUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
-      // 缩略图
+      // 封面图片
       dialogImageUrl: "",
       dialogVisible: false,
       disabled: false,
@@ -333,26 +333,29 @@ export default {
       },
       rules: {
         albumName: [
-          { required: true, message: "请输入专辑名称", trigger: "blur" },
+          { required: true, message: "请输入专辑名称", trigger: "change" },
         ],
         albumNumber: [
-          { required: true, message: "请输入编号", trigger: "blur" },
+          { required: true, message: "请输入编号", trigger: "change" },
         ],
-        songIds: [{ required: true, message: "请添加曲目", trigger: "blur" }],
+        // songIds: [{ required: true, message: "请添加曲目", trigger: "change" }],
         albumClassifyId: [
-          { required: true, message: "请选择分类", trigger: "blur" },
+          { required: true, message: "请选择分类", trigger: "change" },
         ],
-        userIds: [
-          { required: true, message: "请选择艺人（多选）", trigger: "change" },
-        ],
-        issueTime: [{ required: true, message: "请选择时间", trigger: "blur" }],
-        upload: [
-          { required: true, message: "请选择本地曲目", trigger: "blur" },
-        ],
-        song: [{ required: true, message: "请选择本地歌词", trigger: "blur" }],
-        albumPrice: [
-          { required: true, message: "请输入专辑价格", trigger: "change" },
-        ],
+        // userIds: [
+        //   { required: true, message: "请选择艺人（多选）", trigger: "change" },
+        // ],
+        // issueTime: [{ required: true, message: "请选择时间", trigger: "blur" }],
+        // upload: [
+        //   { required: true, message: "请选择专辑曲目", trigger: "blur" },
+        // ],
+        // song: [{ required: true, message: "请选择本地歌词", trigger: "blur" }],
+        // imgUrl: [
+        //   { required: true, message: "请上传封面图片", trigger: "change" },
+        // ],
+        // albumPrice: [
+        //   { required: true, message: "请输入专辑价格", trigger: "change" },
+        // ],
       },
     };
   },
@@ -441,7 +444,7 @@ export default {
       // }
       // this.ruleForm.userIds = res;
     },
-    // 缩略图
+    // 封面图片
     handleAvatarSuccess(res, file) {
       var url = "http://localhost:8094" + file.response.fileName;
       this.dialogImageUrl = url;
@@ -493,7 +496,7 @@ export default {
       }
       console.log("ruleForm", this.ruleForm);
     },
-    // 缩略图
+    // 封面图片
     handleRemove(file) {
       console.log(file);
     },
@@ -565,7 +568,7 @@ export default {
         albumEan: this.ruleForm.albumEan,
         issueTime: this.ruleForm.issueTime,
         id: this.ruleForm.id,
-        imgUrl: this.ruleForm.imgUrl, //缩略图
+        imgUrl: this.ruleForm.imgUrl, //封面图片
       }).then((res) => {
         if (res.code == 200) {
           this.$message({
