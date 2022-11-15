@@ -45,7 +45,7 @@ spring:
   messages:
     # 国际化资源文件路径
     basename: i18n/messages
-  profiles: 
+  profiles:
     active: druid
   # 文件上传
   servlet:
@@ -90,7 +90,7 @@ token:
     secret: abcdefghijklmnopqrstuvwxyz
     # 令牌有效期（默认30分钟）
     expireTime: 500000
-  
+
 ## MyBatis配置
 #mybatis:
 #    # 搜索指定包别名
@@ -136,10 +136,10 @@ wxPay:
   payNotifyUrl:
 
 # PageHelper分页插件
-pagehelper: 
+pagehelper:
   helperDialect: mysql
   supportMethodsArguments: true
-  params: count=countSql 
+  params: count=countSql
 
 # Swagger配置
 swagger:
@@ -149,10 +149,19 @@ swagger:
   pathMapping: /dev-api
 
 # 防止XSS攻击
-xss: 
+xss:
   # 过滤开关
   enabled: true
   # 排除链接（多个用逗号分隔）
   excludes: /system/*
   # 匹配链接
   urlPatterns: /monitor/*,/tool/*
+
+
+#七牛云配置
+oss:
+  domain: http://rlcbim38y.hn-bkt.clouddn.com/     # 访问域名(默认使用七牛云测试域名)
+  accessKey: q4r_YSTrfIQRC2JbTPdJbKys5JqGrwmgh77zhsNh # 公钥
+  secretKey: 6nfVeCyqD_3kRnFHG0xtG5SfqDeWQ6RVbbit19Md # 私钥
+  bucket: new-music  #存储空间名称
+
