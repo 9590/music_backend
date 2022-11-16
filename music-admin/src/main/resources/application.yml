@@ -167,7 +167,7 @@ xss:
 #
 #七牛云配置
 oss:
-  domain: zhang.butubird.xyz    # 访问域名(默认使用七牛云测试域名)
+  domain: http://zhang.butubird.xyz/    # 访问域名(默认使用七牛云测试域名)
   accessKey: wsi91tdCS--bzOoylMzmDlW-zKU2RG9iKI3Hlo1O # 公钥
   secretKey: RaEEcWQu5_PRpmgcq8DKNLDPX1pnhRwwgjpBY1kk # 私钥
   bucket: new-music  #存储空间名称
