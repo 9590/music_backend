@@ -1,5 +1,13 @@
 package com.guoguoyun.framework.web.service;
 
+import com.alibaba.fastjson.JSON;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.guoguoyun.framework.security.filter.NmeHelper;
+import com.guoguoyun.system.domain.AppUser;
+import com.guoguoyun.system.service.IAppUserService;
+import org.omg.CosNaming.NameHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +22,8 @@ import com.guoguoyun.common.exception.ServiceException;
 import com.guoguoyun.common.utils.StringUtils;
 import com.guoguoyun.system.service.ISysUserService;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 用户验证处理
  *
@@ -26,6 +36,8 @@ public class UserDetailsServiceImpl implements UserDetailsService
 
     @Autowired
     private ISysUserService userService;
+    @Autowired
+    private IAppUserService appUserService;
 
     @Autowired
     private SysPermissionService permissionService;

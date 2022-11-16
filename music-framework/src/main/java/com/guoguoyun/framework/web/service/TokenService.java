@@ -50,6 +50,34 @@ public class TokenService
     private RedisCache redisCache;
 
 
+    public String getType(HttpServletRequest request){
+
+        String userType = request.getHeader("userType");
+
+        if (StringUtils.isNotEmpty(userType)){
+            userType = userType.replace(Constants.TOKEN_PREFIX, "");
+        }
+        return userType;
+    }
+
+    /**
+     * 验证令牌有限时间，20分钟自动刷新
+     * @param loginUser
+     */
+    public void verifyToken2(LoginUser loginUser){
+        Long expireTime = loginUser.getExpireTime();
+        long millis = System.currentTimeMillis();
+        if (expireTime-millis<=MILLIS_MINUTE_TEN){
+            refreshToken(loginUser);
+        }
+        refreshToken(loginUser);
+
+    }
+
+
+
+
+
 
     /**
      * 获取用户身份信息

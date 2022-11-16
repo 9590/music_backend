@@ -1,6 +1,9 @@
 package com.guoguoyun.framework.web.service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import com.guoguoyun.framework.security.filter.NmeHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,7 +29,7 @@ import com.guoguoyun.system.service.ISysUserService;
 
 /**
  * 登录校验方法
- * 
+ *
  * @author ruoyi
  */
 @Component
@@ -40,7 +43,7 @@ public class SysLoginService
 
     @Autowired
     private RedisCache redisCache;
-    
+
     @Autowired
     private ISysUserService userService;
 
@@ -49,7 +52,7 @@ public class SysLoginService
 
     /**
      * 登录验证
-     * 
+     *
      * @param username 用户名
      * @param password 密码
      * @param code 验证码
@@ -94,7 +97,7 @@ public class SysLoginService
 
     /**
      * 校验验证码
-     * 
+     *
      * @param username 用户名
      * @param code 验证码
      * @param uuid 唯一标识

@@ -437,7 +437,7 @@ export default {
     },
     // 封面图片
     handleAvatarSuccess(res, file) {
-      console.log(res,file)
+      console.log(res.data,file)
       this.dialogImageUrl = URL.createObjectURL(file.raw);
       // this.dialogImageUrl = file.response.url;
       this.ruleForm.imgUrl = res.data;

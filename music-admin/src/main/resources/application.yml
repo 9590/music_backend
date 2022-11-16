@@ -158,16 +158,16 @@ xss:
   urlPatterns: /monitor/*,/tool/*
 
 
-#七牛云配置
-oss:
-  domain: http://rlcbim38y.hn-bkt.clouddn.com/     # 访问域名(默认使用七牛云测试域名)
-  accessKey: q4r_YSTrfIQRC2JbTPdJbKys5JqGrwmgh77zhsNh # 公钥
-  secretKey: 6nfVeCyqD_3kRnFHG0xtG5SfqDeWQ6RVbbit19Md # 私钥
-  bucket: hg-storage  #存储空间名称
-#
 ##七牛云配置
 #oss:
-#  domain: zhang.butubird.xyz    # 访问域名(默认使用七牛云测试域名)
-#  accessKey: wsi91tdCS--bzOoylMzmDlW-zKU2RG9iKI3Hlo1O # 公钥
-#  secretKey: RaEEcWQu5_PRpmgcq8DKNLDPX1pnhRwwgjpBY1kk # 私钥
-#  bucket: new-music  #存储空间名称
+#  domain: http://rlcbim38y.hn-bkt.clouddn.com/     # 访问域名(默认使用七牛云测试域名)
+#  accessKey: q4r_YSTrfIQRC2JbTPdJbKys5JqGrwmgh77zhsNh # 公钥
+#  secretKey: 6nfVeCyqD_3kRnFHG0xtG5SfqDeWQ6RVbbit19Md # 私钥
+#  bucket: hg-storage  #存储空间名称
+#
+#七牛云配置
+oss:
+  domain: zhang.butubird.xyz    # 访问域名(默认使用七牛云测试域名)
+  accessKey: wsi91tdCS--bzOoylMzmDlW-zKU2RG9iKI3Hlo1O # 公钥
+  secretKey: RaEEcWQu5_PRpmgcq8DKNLDPX1pnhRwwgjpBY1kk # 私钥
+  bucket: new-music  #存储空间名称

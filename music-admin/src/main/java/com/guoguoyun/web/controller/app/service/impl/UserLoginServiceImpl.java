@@ -42,14 +42,20 @@ public class UserLoginServiceImpl implements UserLoginService {
     private static final String TOKEN = "Authorization";
 
 
+    /**
+     * 登录接口
+     *  登录方式 1账号密码  2手机验证码  3微信 4qq 5微博
+     * @param userLoginParams
+     * @return
+     */
     @Override
     public Map<String, Object> login(UserLoginParams userLoginParams) {
         Map<String, Object> map = null;
         switch (userLoginParams.getType()){
-            case MusicCode.LOGIN_ACCOUNT_PASSWORD:
+            case 1:
                 map = this.accountAndPassword(userLoginParams);
                 break;
-            case MusicCode.LOGIN_ACCOUNT_CODE:
+            case 2:
                 map = this.accountAndCode(userLoginParams);
                 break;
             case 3:
@@ -64,8 +70,13 @@ public class UserLoginServiceImpl implements UserLoginService {
         return map;
     }
 
-    public Map<String, Object> accountAndPassword(UserLoginParams userLoginParams){
 
+    /**
+     * 账号密码登录
+     * @param userLoginParams
+     * @return
+     */
+    private Map<String, Object> accountAndPassword(UserLoginParams userLoginParams){
         QueryWrapper<AppUser> appUserQueryWrapper = new QueryWrapper<>();
         appUserQueryWrapper.lambda().eq(AppUser::getUserAccount,userLoginParams.getUserAccount());
         AppUser appUser = appUserService.getOne(appUserQueryWrapper);
@@ -73,11 +84,9 @@ public class UserLoginServiceImpl implements UserLoginService {
         if (ObjectUtil.isEmpty(appUser)){
             ExceptionCast.cast(CommonCode.USERNAME_NOT_EXIST);
         }
-
         if (ObjectUtil.isEmpty(appUser.getPassword())){
             ExceptionCast.cast(CommonCode.PASSWORD_NULL_ERROR);
         }
-
         if (!appUser.getPassword().equals(userLoginParams.getPassword())){
             ExceptionCast.cast(CommonCode.LOGIN_PASSWORD_ERROR);
         }
@@ -87,14 +96,19 @@ public class UserLoginServiceImpl implements UserLoginService {
         loginUser.setUser(new SysUser());
         loginUser.setUserId(appUser.getId());
         String token = tokenService.createToken(loginUser);
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(3);
         map.put(TOKEN,"Bearer "+token);
         map.put("user",appUser);
-
         return map;
     }
 
-    public Map<String,Object> accountAndCode(UserLoginParams userLoginParams){
+
+    /**
+     * 手机号验证码登录
+     * @param userLoginParams
+     * @return
+     */
+    private Map<String,Object> accountAndCode(UserLoginParams userLoginParams){
 //        String code = redisCache.getCacheObject(Constants.RedisPrefixKey + ":" + userLoginParams.getUserAccount());
 //        if (code == null){
 //            ExceptionCast.cast(CommonCode.SMSCODE_EXPIRES);
@@ -136,7 +150,13 @@ public class UserLoginServiceImpl implements UserLoginService {
         return map;
     }
 
-    public Map<String,Object> wxLogin(UserLoginParams userLoginParams){
+
+    /**
+     * 微信登录
+     * @param userLoginParams
+     * @return
+     */
+    private Map<String,Object> wxLogin(UserLoginParams userLoginParams){
         String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" +  "wx592ebedd9e1f0778" +
                 "&secret=" +  "3885b3b6478a95176b5c4abdab858deb" +
                 "&code=" + userLoginParams.getCode() +
