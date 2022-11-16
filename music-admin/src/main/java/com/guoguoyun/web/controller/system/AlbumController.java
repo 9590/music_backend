@@ -3,13 +3,14 @@ package com.guoguoyun.web.controller.system;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
-import javax.servlet.http.HttpServletResponse;
+import javax.annotation.Resource;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageInfo;
 import com.guoguoyun.common.constant.MusicCode;
 import com.guoguoyun.common.utils.DateUtils;
+import com.guoguoyun.system.QiniuUtils.UploadService;
 import com.guoguoyun.system.domain.AppUser;
 import com.guoguoyun.system.params.AlbumExeclParams;
 import com.guoguoyun.system.params.AlbumParams;
@@ -18,14 +19,7 @@ import com.guoguoyun.system.service.IAppUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.guoguoyun.common.annotation.Log;
 import com.guoguoyun.common.core.controller.BaseController;
 import com.guoguoyun.common.core.domain.AjaxResult;
@@ -35,10 +29,11 @@ import com.guoguoyun.system.service.IAlbumService;
 import com.guoguoyun.common.utils.poi.ExcelUtil;
 import com.guoguoyun.common.core.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
+import com.guoguoyun.system.QiniuUtils.UploadService;
 
 /**
  * 专辑管理-专辑库Controller
- * 
+ *
  * @author ruoyi
  * @date 2022-02-11
  */
@@ -51,6 +46,9 @@ public class AlbumController extends BaseController
 
     @Autowired
     private IAppUserService appUserService;
+
+    @Resource
+    private UploadService uploadService;
 
     /**
      * 查询专辑管理-专辑库列表
@@ -87,14 +85,31 @@ public class AlbumController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:album:add')")
     @Log(title = "专辑管理-专辑库", businessType = BusinessType.INSERT)
     @PostMapping("/add")
-    public AjaxResult add(@RequestBody @Validated(BaseParam.add.class) AlbumParams albumParams)
-    {
+    public AjaxResult add(@RequestBody @Validated(BaseParam.add.class) AlbumParams albumParams) {
+//        if (file.isEmpty()){
+//            return AjaxResult.error("文件为空，上传失败");
+//        }
+        //albumParams.setImgUrl(uploadService.upload(file));
         albumParams.setUpdateTime(DateUtils.getNowDate());
         albumParams.setCreateBy(getUsername());
         albumParams.setUpdateBy(getUsername());
         albumService.insertAlbum(albumParams);
-        return AjaxResult.success();
+        return AjaxResult.success("新增成功");
     }
+
+    /**
+     * 新增专辑管理-图片
+     */
+    @Log(title = "专辑管理-专辑库", businessType = BusinessType.INSERT)
+    @PostMapping("/addImg")
+    public AjaxResult addImg(@RequestPart MultipartFile file) {
+        if (file.isEmpty()){
+            return AjaxResult.error("文件为空，上传失败");
+        }
+        return AjaxResult.success("文件上传成功",uploadService.upload(file));
+    }
+
+
 
     /**
      * 修改专辑管理-专辑库
@@ -136,7 +151,7 @@ public class AlbumController extends BaseController
     /**
      * 批量导入
      * @param file
-     * @param updateSupport
+     * @param
      * @return
      * @throws Exception
      */
