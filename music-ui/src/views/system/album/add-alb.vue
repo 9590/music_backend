@@ -135,7 +135,8 @@
           <el-form-item label="封面图片" prop="imgUrl">
             <el-upload
               class="avatar-uploader"
-              :action="uploadUrl"
+              :headers ="header"
+              :action="updateImg()"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"
@@ -261,7 +262,7 @@
               >添加</el-button
             >
             <!-- <el-button
-            class="card2-btn" 
+            class="card2-btn"
             @click="resetForm('ruleForm')"
               >重置</el-button
             > -->
@@ -273,7 +274,8 @@
 </template>
 
 <script>
-import { appUserList, songList, add, getTreeList } from "@/api/album/album";
+import { appUserList, songList, add, getTreeList, addImg } from '@/api/album/album'
+import Cookies from 'js-cookie'
 export default {
   data() {
     const generateData = (_) => {
@@ -288,6 +290,7 @@ export default {
       // return data;
     };
     return {
+      header:{},
       //搜索到的数据
       serchData: [],
       //搜索内容需要的
@@ -303,9 +306,7 @@ export default {
       //分类名称
       upResName: "",
       positionList: [],
-
       options: [],
-      value: [],
       list: [],
       loading: false,
       states: [], //这个是element里写了数据的
@@ -332,24 +333,24 @@ export default {
         albumNumber: [
           { required: true, message: "请输入编号", trigger: "change" },
         ],
-        // songIds: [{ required: true, message: "请添加曲目", trigger: "change" }],
+        songIds: [{ required: true, message: "请添加曲目", trigger: "change" }],
         albumClassifyId: [
           { required: true, message: "请选择分类", trigger: "change" },
         ],
-        // userIds: [
-        //   { required: true, message: "请选择艺人（多选）", trigger: "change" },
-        // ],
-        // issueTime: [{ required: true, message: "请选择时间", trigger: "blur" }],
-        // upload: [
-        //   { required: true, message: "请选择专辑曲目", trigger: "blur" },
-        // ],
-        // song: [{ required: true, message: "请选择本地歌词", trigger: "blur" }],
-        // imgUrl: [
-        //   { required: true, message: "请上传封面图片", trigger: "change" },
-        // ],
-        // albumPrice: [
-        //   { required: true, message: "请输入专辑价格", trigger: "change" },
-        // ],
+        userIds: [
+          { required: true, message: "请选择艺人（多选）", trigger: "change" },
+        ],
+        issueTime: [{ required: true, message: "请选择时间", trigger: "blur" }],
+        upload: [
+          { required: true, message: "请选择专辑曲目", trigger: "blur" },
+        ],
+        song: [{ required: true, message: "请选择本地歌词", trigger: "blur" }],
+        imgUrl: [
+          { required: true, message: "请上传封面图片", trigger: "change" },
+        ],
+        albumPrice: [
+          { required: true, message: "请输入专辑价格", trigger: "change" },
+        ],
       },
     };
   },
@@ -358,8 +359,13 @@ export default {
     this.songList();
     this.getTreeList();
     this.artChange();
+    this.header = { Authorization: Cookies.get('Admin-Token') }
   },
   methods: {
+    //更新歌曲图片
+    updateImg() {
+      return `http://localhost/dev-api/system/album/addImg`
+    },
     //加入
     addClick(item) {
       let res = this.ruleForm.userIds;
@@ -431,8 +437,10 @@ export default {
     },
     // 封面图片
     handleAvatarSuccess(res, file) {
-      this.dialogImageUrl = file.response.url;
-      this.ruleForm.imgUrl = this.dialogImageUrl;
+      console.log(res,file)
+      this.dialogImageUrl = URL.createObjectURL(file.raw);
+      // this.dialogImageUrl = file.response.url;
+      this.ruleForm.imgUrl = res.data;
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";

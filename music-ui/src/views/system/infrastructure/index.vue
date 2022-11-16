@@ -33,7 +33,7 @@
               prop="number"
               label="编号"
               key="number"
-              sortable="custom"
+              sortable
               width="300px"
             >
             </el-table-column>
@@ -107,7 +107,7 @@ export default {
         classifyType: 2, //必传，不能丢，所有页面
         pageSize: 10,
         pageNum: 1,
-        
+
       },
       tableData: [
         {
@@ -148,7 +148,7 @@ export default {
       );
       this.tableData = rows;
       this.total = total;
-     
+
     },
     // 监听每页条数
     handleSizeChange(val) {

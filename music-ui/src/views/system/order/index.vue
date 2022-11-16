@@ -163,10 +163,9 @@
             <el-table-column prop="shopName" label="商品名称" key="shopName">
             </el-table-column>
             <el-table-column
-              prop="writer"
+              prop="shopId"
               label="商品编号"
-              width="120"
-              key="writer"
+              width="220"
             >
             </el-table-column>
             <el-table-column

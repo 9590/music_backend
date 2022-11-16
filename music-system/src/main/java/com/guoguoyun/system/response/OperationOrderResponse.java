@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * 运营管理-订单管理对象 operation_order
- * 
+ *
  * @author ruoyi
  * @date 2022-02-14
  */
@@ -39,9 +39,13 @@ public class OperationOrderResponse extends BaseEntity
     @Excel(name = "商品名称")
     private String shopName;
 
-    /** 商品编号 */
+//    /** 商品编号 */
+//    @Excel(name = "商品编号")
+//    private String writer;
+        /** 商品编号 */
     @Excel(name = "商品编号")
-    private String writer;
+    private String shopId;
+
 
     /** 金额 */
     @Excel(name = "金额")

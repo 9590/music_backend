@@ -38,6 +38,15 @@ export function add(data) {
         data: data
     })
 }
+
+//上传图片
+export function addImg(data) {
+  return request({
+    url: '/system/album/addImg',
+    method: 'post',
+    data: data
+  })
+}
 //删除
 export function remove(id) {
     return request({
