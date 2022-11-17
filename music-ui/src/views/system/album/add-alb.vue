@@ -443,6 +443,9 @@ export default {
       this.ruleForm.imgUrl = res.data;
     },
     beforeAvatarUpload(file) {
+      const littleName = file.name.toLowerCase()
+      const copyFile = new File([file], littleName)
+
       const isJPG = file.type === "image/jpeg";
       const isLt2M = file.size / 1024 / 1024 < 2;
 
@@ -454,7 +457,7 @@ export default {
       }
       return isJPG && isLt2M;
     },
-    // ////////////
+
     handleChange(value, direction, movedKeys) {
       this.ruleForm.songIds = value;
       // console.log(value, direction, movedKeys);
