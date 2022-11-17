@@ -364,7 +364,7 @@ export default {
   methods: {
     //更新歌曲图片
     updateImg() {
-      return `http://localhost/dev-api/system/album/addImg`
+      return `http://127.0.0.1/prod-api/system/album/addImg`
     },
     //加入
     addClick(item) {
