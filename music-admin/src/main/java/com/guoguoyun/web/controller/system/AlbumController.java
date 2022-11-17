@@ -86,10 +86,6 @@ public class AlbumController extends BaseController
     @Log(title = "专辑管理-专辑库", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     public AjaxResult add(@RequestBody @Validated(BaseParam.add.class) AlbumParams albumParams) {
-//        if (file.isEmpty()){
-//            return AjaxResult.error("文件为空，上传失败");
-//        }
-        //albumParams.setImgUrl(uploadService.upload(file));
         albumParams.setUpdateTime(DateUtils.getNowDate());
         albumParams.setCreateBy(getUsername());
         albumParams.setUpdateBy(getUsername());

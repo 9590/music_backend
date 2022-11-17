@@ -112,7 +112,7 @@
                 >
                 </el-option>
               </el-select>
-              <br />
+              <br/>
             </el-form-item>
             <div class="artBox">
               <div class="boxTop">
@@ -126,7 +126,7 @@
               </div>
               <div class="boxBottom">
                 <ul>
-                  <li v-for="(item, index) in serchData" :key="index">
+                  <li v-for="(item, index) in searchData" :key="index">
                     <p>{{ item.userName }}</p>
                     <span @click="addClick(item)">加入</span>
                   </li>
@@ -140,57 +140,13 @@
               :action="uploadUrl"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <img v-if="dialogImageUrl" :src="dialogImageUrl" class="avatar" />
+              :before-upload="beforeAvatarUpload">
+              <img width="100%" v-if="dialogImageUrl" :src="dialogImageUrl" alt="" class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
             <span style="color: #c0c0c0">建议尺寸:400*400</span>
           </el-form-item>
-          <!-- TODO: -->
-          <!-- <el-form-item label="封面图片" prop="aa">
-            <el-upload
-              action="#"
-              list-type="picture-card"
-              :auto-upload="false"
-              v-model="ruleForm.aa"
-            >
-              <i slot="default" class="el-icon-plus"></i>
-              <div slot="file" slot-scope="{ file }">
-                <img
-                  class="el-upload-list__item-thumbnail"
-                  :src="file.url"
-                  alt=""
-                />
-                <span class="el-upload-list__item-actions">
-                  <span
-                    class="el-upload-list__item-preview"
-                    @click="handlePictureCardPreview(file)"
-                  >
-                    <i class="el-icon-zoom-in"></i>
-                  </span>
-                  <span
-                    v-if="!disabled"
-                    class="el-upload-list__item-delete"
-                    @click="handleDownload(file)"
-                  >
-                    <i class="el-icon-download"></i>
-                  </span>
-                  <span
-                    v-if="!disabled"
-                    class="el-upload-list__item-delete"
-                    @click="handleRemove(file)"
-                  >
-                    <i class="el-icon-delete"></i>
-                  </span>
-                </span>
-              </div>
-            </el-upload>
-            <el-dialog :visible.sync="dialogVisible">
-              <img width="100%" :src="dialogImageUrl" alt="" />
-            </el-dialog>
-            <span style="color: #c0c0c0">建议尺寸:400*400</span>
-          </el-form-item> -->
+
           <el-form-item label="发行时间" prop="issueTime">
             <el-date-picker
               class="card2-input"
@@ -206,11 +162,13 @@
               v-model="ruleForm.albumPrice"
               @input="priceChange"
             ></el-input
-            ><span style="color: #999"></span>
+            >
+            <span style="color: #999"></span>
           </el-form-item>
           <el-form-item label="实体唱片购买链接" prop="buyUrl">
             <el-input class="card2-input" v-model="ruleForm.buyUrl"></el-input
-            ><span style="color: #999">(电商链接)</span>
+            >
+            <span style="color: #999">(电商链接)</span>
           </el-form-item>
 
           <el-form-item label="专辑简介" prop="albumIntroduce">
@@ -258,7 +216,8 @@
               class="card2-btn"
               type="primary"
               @click="submitForm('ruleForm')"
-              >保存</el-button
+            >保存
+            </el-button
             >
             <!-- <el-button class="card2-btn" @click="resetForm('ruleForm')"
               >重置</el-button
@@ -276,8 +235,9 @@ import {
   getTreeList,
   appUserList,
   songList,
-  edit,
-} from "@/api/album/album";
+  edit
+} from '@/api/album/album'
+
 export default {
   data() {
     const generateData = (_) => {
@@ -290,19 +250,19 @@ export default {
       //   });
       // }
       // return data;
-    };
+    }
     return {
       //搜索到的数据
-      serchData: [],
+      searchData: [],
       //搜索内容需要的
-      artData: "",
-      uploadUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      artData: '',
+      uploadUrl: process.env.VUE_APP_BASE_API + '/common/upload', // 上传的图片服务器地址
       // 封面图片
-      dialogImageUrl: "",
+      dialogImageUrl: '',
       dialogVisible: false,
       disabled: false,
       //分类
-      upResName: "",
+      upResName: '',
       //
       data: generateData(),
       // value: [1],
@@ -314,34 +274,34 @@ export default {
       loading: false,
       states: [], //这个是element里写了数据的
       ruleForm: {
-        albumName: "",
-        albumEnglishName: "",
-        albumNumber: "",
-        albumEan: "",
+        albumName: '',
+        albumEnglishName: '',
+        albumNumber: '',
+        albumEan: '',
         // aa: "",
         userIds: [],
-        issueTime: "",
-        buyUrl: "",
-        albumClassifyId: "",
+        issueTime: '',
+        buyUrl: '',
+        albumClassifyId: '',
         // textarea: "",
-        songIds: "",
-        albumIntroduce: "",
-        productionData: "",
-        albumPrice: "",
-        id: "",
-        imgUrl: "",
+        songIds: '',
+        albumIntroduce: '',
+        productionData: '',
+        albumPrice: '',
+        id: '',
+        imgUrl: ''
       },
       rules: {
         albumName: [
-          { required: true, message: "请输入专辑名称", trigger: "change" },
+          { required: true, message: '请输入专辑名称', trigger: 'change' }
         ],
         albumNumber: [
-          { required: true, message: "请输入编号", trigger: "change" },
+          { required: true, message: '请输入编号', trigger: 'change' }
         ],
         // songIds: [{ required: true, message: "请添加曲目", trigger: "change" }],
         albumClassifyId: [
-          { required: true, message: "请选择分类", trigger: "change" },
-        ],
+          { required: true, message: '请选择分类', trigger: 'change' }
+        ]
         // userIds: [
         //   { required: true, message: "请选择艺人（多选）", trigger: "change" },
         // ],
@@ -356,86 +316,86 @@ export default {
         // albumPrice: [
         //   { required: true, message: "请输入专辑价格", trigger: "change" },
         // ],
-      },
-    };
+      }
+    }
   },
   created() {
-    this.appUserList();
-    this.songList();
-    this.artChange();
+    this.appUserList()
+    this.songList()
+    this.artChange()
   },
   methods: {
     //加入
     addClick(item) {
-      let res = this.ruleForm.userIds;
+      let res = this.ruleForm.userIds
       if (res.length) {
-        let flag = true;
+        let flag = true
         for (let key in res) {
           if (res[key] == item.id) {
-            flag = false;
-            this.$message("已经添加过，不能重复添加");
-            return;
+            flag = false
+            this.$message('已经添加过，不能重复添加')
+            return
           }
         }
         if (flag) {
-          this.ruleForm.userIds.push(item.id);
-          this.$refs.ruleForm.validateField("userIds");
+          this.ruleForm.userIds.push(item.id)
+          this.$refs.ruleForm.validateField('userIds')
         }
       } else {
-        this.ruleForm.userIds.push(item.id);
-        this.$refs.ruleForm.validateField("userIds");
+        this.ruleForm.userIds.push(item.id)
+        this.$refs.ruleForm.validateField('userIds')
       }
     },
     //搜索艺人
     async artChange() {
-      let res = [];
+      let res = []
       // if (this.artData) {
-      const { data } = await appUserList();
+      const { data } = await appUserList()
       data.map((item) => {
         if (item.userName.search(this.artData) != -1) {
-          res.push(item);
+          res.push(item)
         }
-      });
+      })
       // }
-      this.serchData = res;
+      this.searchData = res
     },
     //专辑价格
     priceChange() {
       this.ruleForm.albumPrice = this.ruleForm.albumPrice.replace(
         /[^\d\.]/g,
-        ""
-      );
-      this.ruleForm.albumPrice = this.ruleForm.albumPrice.replace(/^\./g, ""); //必须保证第一个为数字而不是.
+        ''
+      )
+      this.ruleForm.albumPrice = this.ruleForm.albumPrice.replace(/^\./g, '') //必须保证第一个为数字而不是.
       this.ruleForm.albumPrice = this.ruleForm.albumPrice.replace(
         /\.{2,}/g,
-        "."
-      ); //保证只有出现一个.而没有多个.
+        '.'
+      ) //保证只有出现一个.而没有多个.
       this.ruleForm.albumPrice = this.ruleForm.albumPrice
-        .replace(".", "$#$")
-        .replace(/\./g, "")
-        .replace("$#$", "."); //保证.只出现一次，而不能出现两次以上
+        .replace('.', '$#$')
+        .replace(/\./g, '')
+        .replace('$#$', '.') //保证.只出现一次，而不能出现两次以上
     },
     //获取已有曲目id
     getIncludeSongId(songId) {
-      let res = [];
+      let res = []
       if (songId) {
         for (let item in songId) {
-          res.push(songId[item].id);
+          res.push(songId[item].id)
         }
       }
-      this.value = res;
-      this.ruleForm.songIds = res;
+      this.value = res
+      this.ruleForm.songIds = res
     },
     async songList() {
-      const { data } = await songList();
-      this.data = data;
+      const { data } = await songList()
+      this.data = data
     },
     //艺人列表
     // async appUserList(artistId) {
     async appUserList() {
-      let { data } = await appUserList();
-      this.options = data;
-      this.getInfo();
+      let { data } = await appUserList()
+      this.options = data
+      this.getInfo()
       // let res = [];
       // if (artistId) {
       //   for (let item in artistId) {
@@ -446,83 +406,83 @@ export default {
     },
     // 封面图片
     handleAvatarSuccess(res, file) {
-      var url = "http://localhost:8094" + file.response.fileName;
-      this.dialogImageUrl = url;
-      this.ruleForm.imgUrl = this.dialogImageUrl;
+      var url = 'http://localhost:8094' + file.response.fileName
+      this.dialogImageUrl = url
+      this.ruleForm.imgUrl = this.dialogImageUrl
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 20;
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 20
 
       // if (!isJPG) {
       //   this.$message.error("上传头像图片只能是 JPG 格式!");
       // }
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 20MB!");
+        this.$message.error('上传头像图片大小不能超过 20MB!')
       }
-      return isLt2M;
+      return isLt2M
     },
     //分类
     async getTreeList(classId) {
-      const { data } = await getTreeList();
-      this.positionList = data;
+      const { data } = await getTreeList()
+      this.positionList = data
       if (classId) {
         for (let item in data) {
           if (data[item].id == classId) {
-            this.upResName = data[item].name;
+            this.upResName = data[item].name
           }
         }
       }
     },
     //获取单个专辑
     async getInfo() {
-      const { data } = await getInfo(this.$route.params.id);
+      const { data } = await getInfo(this.$route.params.id)
       // this.ruleForm = data;
       // console.log(2, data);
-      this.ruleForm.albumClassifyId = data.albumClassifyId;
-      this.dialogImageUrl = data.imgUrl;
-      this.getIncludeSongId(data.includeSong);
-      this.getTreeList(data.albumClassifyId);
+      this.ruleForm.albumClassifyId = data.albumClassifyId
+      this.dialogImageUrl = data.imgUrl
+      this.getIncludeSongId(data.includeSong)
+      this.getTreeList(data.albumClassifyId)
       // this.appUserList(data.participateArtist);
-      console.log("allData", data);
+      console.log('allData', data)
       for (let key in this.ruleForm) {
-        if (key == "userIds") {
+        if (key == 'userIds') {
           for (let item in data.participateArtist) {
-            this.ruleForm[key].push(data.participateArtist[item].id);
+            this.ruleForm[key].push(data.participateArtist[item].id)
           }
-        } else if (key != "songIds") {
-          this.ruleForm[key] = data[key];
+        } else if (key != 'songIds') {
+          this.ruleForm[key] = data[key]
         }
       }
-      console.log("ruleForm", this.ruleForm);
+      console.log('ruleForm', this.ruleForm)
     },
     // 封面图片
     handleRemove(file) {
-      console.log(file);
+      console.log(file)
     },
     handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
     },
     handleDownload(file) {
-      console.log(file);
+      console.log(file)
     },
     // ////////////
     handleChange(value, direction, movedKeys) {
-      this.ruleForm.songIds = value;
+      this.ruleForm.songIds = value
       // console.log(value, direction, movedKeys);
     },
     //分类
     handleClear() {
       // 将选择器的值置空
-      this.upResName = "";
-      this.ruleForm.albumClassifyId = "";
+      this.upResName = ''
+      this.ruleForm.albumClassifyId = ''
     },
     handleNodeClick(data) {
-      this.upResName = data.name;
-      this.ruleForm.albumClassifyId = data.id;
+      this.upResName = data.name
+      this.ruleForm.albumClassifyId = data.id
       // 选择器执行完成后，使其失去焦点隐藏下拉框的效果
-      this.$refs.selectUpResId.blur();
+      this.$refs.selectUpResId.blur()
     },
     //艺人列表发生改变时
     // artChanges() {
@@ -530,28 +490,28 @@ export default {
     //   this.$forceUpdate();
     // },
     remoteMethod(query) {
-      if (query !== "") {
-        this.loading = true;
+      if (query !== '') {
+        this.loading = true
         setTimeout(() => {
-          this.loading = false;
+          this.loading = false
           this.options = this.list.filter((item) => {
-            return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1;
-          });
-        }, 200);
+            return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+          })
+        }, 200)
       } else {
-        this.options = [];
+        this.options = []
       }
     },
 
     async submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.interface();
+          this.interface()
         } else {
-          console.log("error 提交!!");
-          return false;
+          console.log('error 提交!!')
+          return false
         }
-      });
+      })
     },
     async interface() {
       await edit({
@@ -568,29 +528,35 @@ export default {
         albumEan: this.ruleForm.albumEan,
         issueTime: this.ruleForm.issueTime,
         id: this.ruleForm.id,
-        imgUrl: this.ruleForm.imgUrl, //封面图片
+        imgUrl: this.ruleForm.imgUrl //封面图片
       }).then((res) => {
         if (res.code == 200) {
           this.$message({
-            message: "提交成功",
-            type: "success",
-          });
-          this.$router.push(`/track/album/index`);
+            message: '提交成功',
+            type: 'success'
+          })
+          this.$router.push(`/track/album/index`)
         }
-      });
+      })
     },
     resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
+      this.$refs[formName].resetFields()
+    }
   },
   mounted() {
     this.list = this.states.map((item) => {
-      return { value: `value:${item}`, label: `label:${item}` };
-    });
-  },
-};
+      return { value: `value:${item}`, label: `label:${item}` }
+    })
+  }
+}
 </script>
 <style lang="scss" scoped>
+
+.avatar {
+  width: 200px;
+  height: 200px;
+}
+
 .advertisement {
   .box-card {
     .card1 {
@@ -600,14 +566,17 @@ export default {
       padding-left: 10px;
       border-left: 5px solid orange;
     }
+
     .card2 {
       ::v-deep .el-transfer-panel {
         border: none;
       }
+
       ::v-deep .el-transfer-panel__header {
         border-bottom: none;
         background-color: white;
       }
+
       ::v-deep .el-transfer-panel__body {
         border: 1px solid #333;
       }
@@ -615,6 +584,7 @@ export default {
       .card2-input {
         width: 400px;
       }
+
       // .card2-input1{
       //     width: 550px;
       // }
@@ -625,8 +595,10 @@ export default {
     }
   }
 }
+
 .artStyle {
   position: relative;
+
   .artBox {
     z-index: 1000;
     background-color: #fff;
@@ -636,6 +608,7 @@ export default {
     height: 200px;
     top: 0;
     left: 550px;
+
     .boxTop {
       :nth-child(1) {
         margin-top: 5px;
@@ -643,6 +616,7 @@ export default {
         height: 30px;
         margin-left: 10px;
       }
+
       > :nth-child(1) {
         > :nth-child(2) {
           i {
@@ -652,20 +626,25 @@ export default {
       }
     }
   }
+
   .boxBottom {
     width: 100%;
+
     ul {
       overflow: auto;
       height: 148px;
+
       li {
         height: 34px;
         line-height: 34px;
         text-indent: 20px;
+
         p {
           display: inline-block;
           margin: 0;
           text-indent: 0;
         }
+
         span {
           text-indent: 0;
           display: inline-block;
@@ -681,9 +660,11 @@ export default {
     }
   }
 }
+
 li {
   list-style: none;
 }
+
 ul {
   padding: 0;
 }
