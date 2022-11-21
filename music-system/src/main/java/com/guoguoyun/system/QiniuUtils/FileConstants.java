@@ -7,6 +7,11 @@ package com.guoguoyun.system.QiniuUtils;
  * @date 2022-11-16
  */
 public class FileConstants {
+
+    public static final String ONE = "one";
+    public static final String TWO = "two";
+    public static final String THERE = "there";
+
     /**
      * MP3路径
      */
@@ -16,6 +21,16 @@ public class FileConstants {
      * 图片路径
      */
     public static final String JPG_FILE_PATH = "files/album/cover/";
+
+    /**
+     * 广告图保存位置
+     */
+    public static final String ADVERT_IMAGE_PATH = "files/advert/";
+
+    /**
+     * 文件未指定默认保存位置
+     */
+    public static final String DEFAULT_FILE_PATH = "files/default/";
 
 
     public static final String JPG = "jpg";

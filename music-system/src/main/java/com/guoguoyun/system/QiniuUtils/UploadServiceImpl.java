@@ -9,8 +9,7 @@ import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,38 +20,37 @@ import java.io.InputStream;
  * @date 2022/4/21 22:50
  */
 @Service
-@Data
-@ConfigurationProperties(prefix = "oss")
 public class UploadServiceImpl implements UploadService {
+
+    @Value("oss.accessKey")
     private String accessKey;
+    @Value("oss.secretKey")
     private String secretKey;
+    @Value("oss.bucket")
     private String bucket;
+    @Value("oss.domain")
     private String domain;
 
     @Override
-    public String upload(MultipartFile file) {
+    public String upload(MultipartFile file,UpdateParams updateParams) {
         //判断文件类型
-        //获取原始文件名
-        if (file == null) {
-
+        if (file.isEmpty()) {
             AjaxResult.error("文件上传失败！");
         }
-
-
-        //上传文件名
-        assert file != null;
         String originalFileName = file.getOriginalFilename();
         //上传文件类型
         String fileType = file.getContentType();
         //对原始文件名进行判断
         assert originalFileName != null;
         assert fileType != null;
-        if (!originalFileName.endsWith(".png") && !originalFileName.endsWith(".jpg") && !originalFileName.endsWith(".flac") && !originalFileName.endsWith(".mp3")) {
+        if (!originalFileName.endsWith(".png") && !originalFileName.endsWith(".jpg") &&
+                !originalFileName.endsWith(".flac") && !originalFileName.endsWith(".mp3")) {
             //TODO 抛出错误，此处只允许.png
             AjaxResult.error("只可以上传指定格式的文件！");
         }
 
-        String path = PathUtils.generateFilePath(originalFileName,fileType);
+        String path = PathUtils.generateFilePath(originalFileName,updateParams);
+
         return uploadOss(file, path);
     }
 

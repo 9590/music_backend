@@ -41,13 +41,8 @@
               :action="uploadUrl"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
-              v-model="ruleForm.advImgUrl"
-            >
-              <img
-                v-if="ruleForm.advImgUrl"
-                :src="ruleForm.advImgUrl"
-                class="avatar"
-              />
+              v-model="ruleForm.advImgUrl">
+              <img v-if="ruleForm.advImgUrl" :src="ruleForm.advImgUrl" class="avatar" alt=""/>
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
@@ -97,10 +92,6 @@ import { getToken } from "@/utils/auth";
 export default {
   data() {
     return {
-      uploadUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
-      // headers: {
-      //   Authorization: "Bearer " + getToken(),
-      // },
       advLocation: [
         {
           value: 1,
@@ -114,18 +105,8 @@ export default {
           value: 3,
           label: "商城轮播图",
         },
-        // {
-        //   value: 4,
-        //   label: "乐讯",
-        // },
-        // {
-        //   value: 5,
-        //   label: "发烧乐园",
-        // },
-      ],
-      // imageUrl: "", //图片地址
-      // dialogVisible: false,
 
+      ],
       ruleForm: {
         advName: "", //广告名称*
         advLocation: "", //投放位置
@@ -153,22 +134,18 @@ export default {
   },
   created() {
     this.getInAdvList(this.$route.params.id);
-    // console.log("本id是",this.$route.params.id);
     this.id = this.$route.params.id; //获取单个广告信息
   },
 
   methods: {
     async getInAdvList() {
       const { data } = await getInAdvList(this.$route.params.id);
-      // console.log('111',data);
       this.ruleForm = data;
-      // data.detail.lunboPic = res.data.detail.lunboPic.replace(/,/g, '')
+
     },
     // 规定图片上传规范
     handleAvatarSuccess(res, file) {
-      // console.log('res',res);
-      //  console.log('file',file);
-      // console.log(process.env.VUE_APP_BASE_API);
+
       this.imageUrl = process.env.VUE_APP_BASE_API + res.fileName;
       if (res.code == 200) {
         this.imageUrl = res.url;
@@ -177,9 +154,8 @@ export default {
         this.$message.error("图片插入失败");
       }
     },
-    // // 提交
+    //提交
     async submitForm(ruleForm) {
-      // console.log(this.ruleForm);
       const { res } = await editAdvList({
         id: this.id, //让新修改的数据覆盖原数据
         advName: this.ruleForm.advName, //广告名称*
@@ -189,7 +165,6 @@ export default {
         advShow: this.ruleForm.advShow, //显示*
         advSort: this.ruleForm.advSort, //排序*
       });
-      //  console.log("111111",res);
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.$message({

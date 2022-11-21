@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageInfo;
 import com.guoguoyun.common.constant.MusicCode;
 import com.guoguoyun.common.utils.DateUtils;
+import com.guoguoyun.system.QiniuUtils.UpdateParams;
 import com.guoguoyun.system.QiniuUtils.UploadService;
 import com.guoguoyun.system.domain.AppUser;
 import com.guoguoyun.system.params.AlbumExeclParams;
@@ -29,7 +30,7 @@ import com.guoguoyun.system.service.IAlbumService;
 import com.guoguoyun.common.utils.poi.ExcelUtil;
 import com.guoguoyun.common.core.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
-import com.guoguoyun.system.QiniuUtils.UploadService;
+
 
 /**
  * 专辑管理-专辑库Controller
@@ -53,7 +54,8 @@ public class AlbumController extends BaseController
     /**
      * 查询专辑管理-专辑库列表
      */
-    @PreAuthorize("@ss.hasPermi('system:album:list')")       // postman测试时先注释掉
+    // postman测试时先注释掉
+    @PreAuthorize("@ss.hasPermi('system:album:list')")
     @GetMapping("/list")
     public TableDataInfo list(Album album)
     {
@@ -98,11 +100,13 @@ public class AlbumController extends BaseController
      */
     @Log(title = "专辑管理-专辑库", businessType = BusinessType.INSERT)
     @PostMapping("/addImg")
-    public AjaxResult addImg(@RequestPart MultipartFile file) {
+    public AjaxResult addImg(@RequestPart MultipartFile file, UpdateParams updateParams) {
         if (file.isEmpty()){
             return AjaxResult.error("文件为空，上传失败");
         }
-        return AjaxResult.success("文件上传成功",uploadService.upload(file));
+
+
+        return AjaxResult.success("文件上传成功",uploadService.upload(file,updateParams));
     }
 
 

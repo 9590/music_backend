@@ -6,7 +6,6 @@
       <div class="card1">添加专辑</div>
     </el-card>
 
-    <!--  -->
     <el-card class="box-card" style="margin-bottom: 10px">
       <div class="card2">
         <el-form
@@ -14,19 +13,13 @@
           :rules="rules"
           ref="ruleForm"
           label-width="100px"
-          class="demo-ruleForm"
-        >
+          class="demo-ruleForm">
           <el-form-item label="专辑名称" prop="albumName">
-            <el-input
-              class="card2-input"
-              v-model="ruleForm.albumName"
-            ></el-input>
+            <el-input class="card2-input" v-model="ruleForm.albumName"></el-input>
           </el-form-item>
           <el-form-item label="英文名称" prop="albumEnglishName">
             <el-input
-              class="card2-input"
-              v-model="ruleForm.albumEnglishName"
-            ></el-input>
+              class="card2-input" v-model="ruleForm.albumEnglishName"></el-input>
           </el-form-item>
           <el-form-item label="专辑编号" prop="albumNumber">
             <el-input
@@ -111,6 +104,7 @@
               </el-select>
               <br />
             </el-form-item>
+
             <div class="artBox">
               <div class="boxTop">
                 <el-input
@@ -123,8 +117,8 @@
               </div>
               <div class="boxBottom">
                 <ul>
-                  <li v-for="(item, index) in serchData" :key="index">
-                    <p>{{ item.userName }}</p>
+                  <li v-for="(item, index) in searchData" :key="index">
+                    <p>{{ item.artistName }}</p>
                     <span @click="addClick(item)">加入</span>
                   </li>
                 </ul>
@@ -139,57 +133,12 @@
               :action="updateImg()"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <img v-if="dialogImageUrl" :src="dialogImageUrl" class="avatar" />
+              :before-upload="beforeAvatarUpload">
+              <img v-if="dialogImageUrl" :src="dialogImageUrl" class="avatar" alt=""/>
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
             <span style="color: #c0c0c0">建议尺寸:400*400</span>
           </el-form-item>
-          <!-- <el-form-item label="封面图片" prop="imgUrl">
-            <el-upload
-              :on-success="getImgUrl"
-              action="#"
-              list-type="picture-card"
-              :auto-upload="false"
-              v-model="ruleForm.imgUrl"
-            >
-              <i slot="default" class="el-icon-plus"></i>
-              <div slot="file" slot-scope="{ file }">
-                <img
-                  class="el-upload-list__item-thumbnail"
-                  :src="file.url"
-                  alt=""
-                />
-                <span class="el-upload-list__item-actions">
-                  <span
-                    class="el-upload-list__item-preview"
-                    @click="handlePictureCardPreview(file)"
-                  >
-                    <i class="el-icon-zoom-in"></i>
-                  </span>
-                  <span
-                    v-if="!disabled"
-                    class="el-upload-list__item-delete"
-                    @click="handleDownload(file)"
-                  >
-                    <i class="el-icon-download"></i>
-                  </span>
-                  <span
-                    v-if="!disabled"
-                    class="el-upload-list__item-delete"
-                    @click="handleRemove(file)"
-                  >
-                    <i class="el-icon-delete"></i>
-                  </span>
-                </span>
-              </div>
-            </el-upload>
-            <el-dialog :visible.sync="dialogVisible">
-              <img width="100%" :src="dialogImageUrl" alt="" />
-            </el-dialog>
-            <span style="color: #c0c0c0">建议尺寸:400*400</span>
-          </el-form-item> -->
           <el-form-item label="发行时间" prop="issueTime">
             <el-date-picker
               class="card2-input"
@@ -276,6 +225,7 @@
 <script>
 import { appUserList, songList, add, getTreeList, addImg } from '@/api/album/album'
 import Cookies from 'js-cookie'
+import { listArtist } from '@/api/album/artist'
 export default {
   data() {
     const generateData = (_) => {
@@ -292,7 +242,7 @@ export default {
     return {
       header:{},
       //搜索到的数据
-      serchData: [],
+      searchData: [],
       //搜索内容需要的
       artData: "",
       uploadUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
@@ -359,6 +309,7 @@ export default {
     this.songList();
     this.getTreeList();
     this.artChange();
+    this.getArtistList()
     this.header = { Authorization: Cookies.get('Admin-Token') }
   },
   methods: {
@@ -398,7 +349,7 @@ export default {
         }
       });
       // }
-      this.serchData = res;
+      //this.searchData = res;
     },
     //专辑价格
     priceChange() {
@@ -416,16 +367,24 @@ export default {
         .replace(/\./g, "")
         .replace("$#$", "."); //保证.只出现一次，而不能出现两次以上
     },
-    //获取图片路径
-    // getImgUrl(response, file, fileList) {
-    //   console.log(response, file, fileList);
-    // },
+
     //艺人列表
     async appUserList() {
       let { data } = await appUserList();
       this.options = data;
-      // console.log(data);
     },
+
+
+    /** 查询参与艺人列表 */
+    getArtistList() {
+      listArtist(this.queryParams).then(response => {
+        this.searchData = response.rows;
+        console.log(this.searchData)
+
+      });
+    },
+
+
     async songList() {
       const { data } = await songList();
       this.data = data;

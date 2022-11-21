@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.AlbumAndArtistMapper">
+    
+    <resultMap type="AlbumAndArtist" id="AlbumAndArtistResult">
+        <result property="id"    column="id"    />
+        <result property="albumId"    column="album_id"    />
+        <result property="albumArtistId"    column="album_artist_id"    />
+    </resultMap>
+
+    <sql id="selectAlbumAndArtistVo">
+        select id, album_id, album_artist_id from album_and_artist
+    </sql>
+
+    <select id="selectAlbumAndArtistList" parameterType="AlbumAndArtist" resultMap="AlbumAndArtistResult">
+        <include refid="selectAlbumAndArtistVo"/>
+        <where>  
+            <if test="albumId != null "> and album_id = #{albumId}</if>
+            <if test="albumArtistId != null "> and album_artist_id = #{albumArtistId}</if>
+        </where>
+    </select>
+    
+    <select id="selectAlbumAndArtistById" parameterType="Long" resultMap="AlbumAndArtistResult">
+        <include refid="selectAlbumAndArtistVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAlbumAndArtist" parameterType="AlbumAndArtist" useGeneratedKeys="true" keyProperty="id">
+        insert into album_and_artist
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="albumId != null">album_id,</if>
+            <if test="albumArtistId != null">album_artist_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="albumId != null">#{albumId},</if>
+            <if test="albumArtistId != null">#{albumArtistId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAlbumAndArtist" parameterType="AlbumAndArtist">
+        update album_and_artist
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="albumId != null">album_id = #{albumId},</if>
+            <if test="albumArtistId != null">album_artist_id = #{albumArtistId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAlbumAndArtistById" parameterType="Long">
+        delete from album_and_artist where id = #{id}
+    </delete>
+
+    <delete id="deleteAlbumAndArtistByIds" parameterType="String">
+        delete from album_and_artist where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

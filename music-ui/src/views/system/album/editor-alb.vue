@@ -6,7 +6,6 @@
       <div class="card1">编辑专辑</div>
     </el-card>
 
-    <!--  -->
     <el-card class="box-card" style="margin-bottom: 10px">
       <div class="card2">
         <el-form
@@ -52,21 +51,6 @@
               "
             ></el-input>
           </el-form-item>
-          <!-- <el-form-item label="分类" prop="region">
-            <el-select
-              class="card2-input"
-              v-model="ruleForm.region"
-              placeholder="请选择"
-            >
-              <el-option
-                v-for="item in positionList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item> -->
           <el-form-item label="分类" prop="albumClassifyId">
             <el-select
               v-model="upResName"
@@ -137,11 +121,12 @@
           <el-form-item label="封面图片" prop="imgUrl">
             <el-upload
               class="avatar-uploader"
-              :action="uploadUrl"
+              :headers ="header"
+              :action="updateImg()"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload">
-              <img width="100%" v-if="dialogImageUrl" :src="dialogImageUrl" alt="" class="avatar"/>
+              <img v-if="dialogImageUrl" :src="dialogImageUrl" class="avatar" alt=""/>
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
             <span style="color: #c0c0c0">建议尺寸:400*400</span>
@@ -237,6 +222,7 @@ import {
   songList,
   edit
 } from '@/api/album/album'
+import Cookies from 'js-cookie'
 
 export default {
   data() {
@@ -252,6 +238,7 @@ export default {
       // return data;
     }
     return {
+      header:{},
       //搜索到的数据
       searchData: [],
       //搜索内容需要的
@@ -323,8 +310,14 @@ export default {
     this.appUserList()
     this.songList()
     this.artChange()
+    this.header = { Authorization: Cookies.get('Admin-Token') }
   },
   methods: {
+    //更新歌曲图片
+    updateImg() {
+      return `http://119.29.153.101/prod-api/system/album/addImg`
+    },
+
     //加入
     addClick(item) {
       let res = this.ruleForm.userIds
@@ -349,14 +342,12 @@ export default {
     //搜索艺人
     async artChange() {
       let res = []
-      // if (this.artData) {
       const { data } = await appUserList()
       data.map((item) => {
         if (item.userName.search(this.artData) != -1) {
           res.push(item)
         }
       })
-      // }
       this.searchData = res
     },
     //专辑价格
@@ -390,37 +381,36 @@ export default {
       const { data } = await songList()
       this.data = data
     },
+
     //艺人列表
     // async appUserList(artistId) {
     async appUserList() {
       let { data } = await appUserList()
       this.options = data
       this.getInfo()
-      // let res = [];
-      // if (artistId) {
-      //   for (let item in artistId) {
-      //     res.push(artistId[item].id);
-      //   }
-      // }
-      // this.ruleForm.userIds = res;
+
     },
+
     // 封面图片
     handleAvatarSuccess(res, file) {
-      var url = 'http://localhost:8094' + file.response.fileName
-      this.dialogImageUrl = url
-      this.ruleForm.imgUrl = this.dialogImageUrl
+      console.log(res.data,file)
+      this.dialogImageUrl = URL.createObjectURL(file.raw);
+      this.ruleForm.imgUrl = res.data;
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 20
+      const littleName = file.name.toLowerCase()
+      const copyFile = new File([file], littleName)
 
-      // if (!isJPG) {
-      //   this.$message.error("上传头像图片只能是 JPG 格式!");
-      // }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 20MB!')
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
       }
-      return isLt2M
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
     },
     //分类
     async getTreeList(classId) {

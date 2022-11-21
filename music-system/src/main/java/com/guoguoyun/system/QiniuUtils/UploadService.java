@@ -10,8 +10,9 @@ public interface UploadService {
 
     /**
      * 上传文件
-     * @param file
-     * @return
+     * @param file 文件
+     * @param updateParams 上传参数
+     * @return path
      */
-    String upload(MultipartFile file);
+    String upload(MultipartFile file,UpdateParams updateParams);
 }

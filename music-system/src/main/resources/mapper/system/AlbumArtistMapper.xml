@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoguoyun.system.mapper.AlbumArtistMapper">
+
+    <resultMap type="AlbumArtist" id="AlbumArtistResult">
+        <result property="id"    column="id"    />
+        <result property="artistName"    column="artist_name"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectAlbumArtistVo">
+        select id, artist_name, create_by, create_time, update_by, update_time, remark from album_artist
+    </sql>
+
+    <select id="selectAlbumArtistList" parameterType="AlbumArtist" resultMap="AlbumArtistResult">
+        <include refid="selectAlbumArtistVo"/>
+        <where>
+            <if test="artistName != null  and artistName != ''"> and artist_name like concat('%', #{artistName}, '%')</if>
+
+        </where>
+    </select>
+
+    <select id="selectAlbumArtistById" parameterType="Long" resultMap="AlbumArtistResult">
+        <include refid="selectAlbumArtistVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAlbumArtist" parameterType="AlbumArtist">
+        insert into album_artist
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="artistName != null">artist_name,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="artistName != null">#{artistName},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAlbumArtist" parameterType="AlbumArtist">
+        update album_artist
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="artistName != null">artist_name = #{artistName},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAlbumArtistById" parameterType="Long">
+        delete from album_artist where id = #{id}
+    </delete>
+
+    <delete id="deleteAlbumArtistByIds" parameterType="String">
+        delete from album_artist where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
