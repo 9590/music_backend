@@ -2,6 +2,7 @@ package com.guoguoyun.system.service.impl;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.bean.BeanUtil;
@@ -9,6 +10,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageInfo;
 import com.guoguoyun.common.constant.MusicCode;
+import com.guoguoyun.common.core.domain.AjaxResult;
 import com.guoguoyun.common.utils.DateUtils;
 import com.guoguoyun.common.utils.SecurityUtils;
 import com.guoguoyun.system.domain.*;
@@ -27,7 +29,7 @@ import com.guoguoyun.system.mapper.AlbumMapper;
 
 /**
  * 专辑管理-专辑库Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2022-02-11
  */
@@ -50,11 +52,14 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
     private IAppUserService appUserService;
 
     @Autowired
+    private IAlbumArtistService albumArtistService;
+
+    @Autowired
     private IAlbumSongService albumSongService;
 
     /**
      * 查询专辑管理-专辑库
-     * 
+     *
      * @param id 专辑管理-专辑库主键
      * @return 专辑管理-专辑库
      */
@@ -87,7 +92,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
     /**
      * 查询专辑管理-专辑库列表
-     * 
+     *
      * @param album 专辑管理-专辑库
      * @return 专辑管理-专辑库
      */
@@ -106,6 +111,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
             QueryWrapper<AlbumUser> albumUserQueryWrapper = new QueryWrapper<>();
             albumUserQueryWrapper.lambda().eq(AlbumUser::getAlbumId,t.getId());
             albumUserQueryWrapper.lambda().orderByAsc(AlbumUser::getCreateTime);
+
             List<AlbumUser> albumUsers = albumUserService.list(albumUserQueryWrapper);
             StringBuffer stringBuffer = new StringBuffer();
             for (int i = 0; i < albumUsers.size(); i++) {
@@ -133,7 +139,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
     /**
      * 新增专辑管理-专辑库
-     * 
+     *
      * @param album 专辑管理-专辑库
      * @return 结果
      */
@@ -176,7 +182,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
     /**
      * 修改专辑管理-专辑库
-     * 
+     *
      * @param albumParams 专辑管理-专辑库
      * @return 结果
      */
@@ -215,7 +221,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
     /**
      * 批量删除专辑管理-专辑库
-     * 
+     *
      * @param ids 需要删除的专辑管理-专辑库主键
      * @return 结果
      */
@@ -227,7 +233,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
     /**
      * 删除专辑管理-专辑库信息
-     * 
+     *
      * @param id 专辑管理-专辑库主键
      * @return 结果
      */
@@ -241,7 +247,6 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
     public void importData(List<AlbumExeclParams> albumList) {
         albumList.forEach(t -> {
             Album album = BeanUtil.toBean(t, Album.class);
-
             //根据编号查分类
             if (ObjectUtil.isNotEmpty(t.getAlbumClassifyId())){
                 QueryWrapper<Classify> classifyQueryWrapper = new QueryWrapper<>();
@@ -277,7 +282,6 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
                 }
 
             }
-
             //包含曲目
             if (ObjectUtil.isNotEmpty(t.getSongIds())){
                 boolean contains = t.getSongIds().contains("，");
@@ -301,5 +305,14 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
                 }
             }
         });
+    }
+
+    @Override
+    public AjaxResult getMaxAlbumCode() {
+        List<Map<String, Object>> maps = albumMapper.selectMaps(new QueryWrapper<Album>().select("max(album_number)"));
+        //拿到最大编号+1  %08d防止乱码
+        String workId = String.format("%08d", Integer.parseInt(maps.get(0).get("max(album_number)").toString()) + 1);
+
+        return AjaxResult.success("success",workId);
     }
 }

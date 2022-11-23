@@ -2,6 +2,7 @@ package com.guoguoyun.web.controller.system;
 
 import java.util.List;
 
+import com.guoguoyun.system.domain.vo.AddAlbumArtVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -49,17 +50,6 @@ public class AlbumAndArtistController extends BaseController
     }
 
     /**
-     * 新增专辑、艺人关联
-     */
-    @PreAuthorize("@ss.hasPermi('system:artist:add')")
-    @Log(title = "专辑、艺人关联", businessType = BusinessType.INSERT)
-    @PostMapping("/add")
-    public AjaxResult add(@RequestBody AlbumAndArtist albumAndArtist)
-    {
-        return toAjax(albumAndArtistService.insertAlbumAndArtist(albumAndArtist));
-    }
-
-    /**
      * 修改专辑、艺人关联
      */
     @PreAuthorize("@ss.hasPermi('system:artist:edit')")
@@ -80,4 +70,38 @@ public class AlbumAndArtistController extends BaseController
     {
         return toAjax(albumAndArtistService.deleteAlbumAndArtistByIds(ids));
     }
+
+
+    /**
+     * 新增专辑、艺人关联
+     */
+
+    @PostMapping("/add")
+    public AjaxResult add(@RequestBody AddAlbumArtVo addAlbumArtVo)
+    {
+        return toAjax(albumAndArtistService.insertAlbumAndArtist(addAlbumArtVo));
+    }
+
+    /**
+     * 删除专辑、艺人关联
+     */
+
+    @PostMapping("/removeByAlbumIdAndArtId")
+    public AjaxResult removeByAlbumIdAndArtId(@RequestBody AddAlbumArtVo addAlbumArtVo)
+    {
+        return toAjax(albumAndArtistService.deleteAlbumAndArtistId(addAlbumArtVo));
+    }
+
+    /**
+     * 获取专辑、艺人关联详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('system:artist:query')")
+    @GetMapping(value = "/getInfoByAlbumId/{albumId}")
+    public AjaxResult getInfoByAlbumId(@PathVariable("albumId") Long albumId)
+    {
+        return AjaxResult.success(albumAndArtistService.getInfoByAlbumId(albumId));
+    }
+
+
+
 }

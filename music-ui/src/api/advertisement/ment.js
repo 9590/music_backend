@@ -39,3 +39,12 @@ export function listAdvList(query) {
     params: query
   })
 }
+
+// 上传文件
+export function updateParams(data) {
+  return request({
+    url: '/updateParams',
+    method: 'post',
+    data
+  })
+}

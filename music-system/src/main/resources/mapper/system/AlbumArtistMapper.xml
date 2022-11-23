@@ -22,7 +22,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectAlbumArtistVo"/>
         <where>
             <if test="artistName != null  and artistName != ''"> and artist_name like concat('%', #{artistName}, '%')</if>
-
         </where>
     </select>
 

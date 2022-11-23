@@ -38,11 +38,13 @@
           <el-form-item label="添加图片" prop="advImgUrl">
             <el-upload
               class="avatar-uploader"
-              :action="uploadUrl"
+              action=""
+              :http-request="httpRequest"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
-              v-model="ruleForm.advImgUrl">
-              <img v-if="imageUrl" :src="imageUrl" class="avatar"/>
+              v-model="ruleForm.advImgUrl"
+            >
+              <img v-if="imageUrl" :src="imageUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
@@ -77,9 +79,8 @@
               class="card2-btn"
               type="primary"
               @click="submitForm('ruleForm')"
-            >提交
-            </el-button
-            >
+              >提交
+            </el-button>
             <!-- <el-button class="card2-btn" @click="resetForm('ruleForm')"
               >重置</el-button
             > -->
@@ -91,106 +92,146 @@
 </template>
 
 <script>
-import { addAdvList } from '@/api/advertisement/ment'
-import { getToken } from '@/utils/auth'
+import { addAdvList } from "@/api/advertisement/ment";
+import { addImg } from "@/api/album/album";
+import { getToken } from "@/utils/auth";
 
 export default {
   data() {
     return {
-
       advLocation: [
         {
           value: 1,
-          label: '欢迎首页'
+          label: "欢迎首页",
         },
         {
           value: 2,
-          label: '首页轮播图'
+          label: "首页轮播图",
         },
         {
           value: 3,
-          label: '商城轮播图'
+          label: "商城轮播图",
         },
         {
           value: 4,
-          label: '乐讯'
+          label: "乐讯",
         },
         {
           value: 5,
-          label: '发烧乐园'
-        }],
-      imageUrl: '', //图片地址
+          label: "发烧乐园",
+        },
+      ],
+      imageUrl: "", //图片地址
       ruleForm: {
         advName: undefined, //广告名称*
         advImgUrl: undefined, //添加图片*
         advUrl: undefined, //链接
         advShow: undefined, //显示*
         advSort: undefined, //排序*
-        advLocation: undefined //投放位置
+        advLocation: undefined, //投放位置
       },
       rules: {
         advName: [
-          { required: true, message: '请输入广告名称', trigger: 'blur' }
+          { required: true, message: "请输入广告名称", trigger: "blur" },
         ],
         advLocation: [
-          { required: true, message: '请选择投放位置', trigger: 'blur' }
+          { required: true, message: "请选择投放位置", trigger: "blur" },
         ],
-        advImgUrl: [{ required: true, message: '请选择图片', trigger: 'blur' }],
+        advImgUrl: [{ required: true, message: "请选择图片", trigger: "blur" }],
         advShow: [
-          { required: true, message: '请选择是否显示', trigger: 'blur' }
+          { required: true, message: "请选择是否显示", trigger: "blur" },
         ],
         advSort: [
-          { required: true, message: '请输入排序数值', trigger: 'change' }
-        ]
-      }
-    }
+          { required: true, message: "请输入排序数值", trigger: "change" },
+        ],
+      },
+    };
   },
   methods: {
     // 规定图片上传规范
+    // handleAvatarSuccess(res, file) {
+    //   console.log('res', res)
+    //   console.log('file', file)
+    //   console.log(process.env.VUE_APP_BASE_API)
+    //   this.imageUrl = process.env.VUE_APP_BASE_API + res.fileName
+    //   if (res.code == 200) {
+    //     this.imageUrl = res.url
+    //     this.ruleForm.advImgUrl = res.url
+    //   } else {
+    //     this.$message.error('图片插入失败')
+    //   }
+    // },
     handleAvatarSuccess(res, file) {
-      console.log('res', res)
-      console.log('file', file)
-      console.log(process.env.VUE_APP_BASE_API)
-      this.imageUrl = process.env.VUE_APP_BASE_API + res.fileName
-      if (res.code == 200) {
-        this.imageUrl = res.url
-        this.ruleForm.advImgUrl = res.url
-      } else {
-        this.$message.error('图片插入失败')
+      console.log(res.data, file);
+      this.dialogImageUrl = URL.createObjectURL(file.raw);
+      // this.dialogImageUrl = file.response.url;
+      this.ruleForm.imgUrl = res.data;
+    },
+    httpRequest(file) {
+      let fileNameLen = file.file.name.split(".").length;
+      let data = {
+        file: file.file,
+        fileType: file.file.name.split(".")[fileNameLen - 1],
+        updatePath: "one",
+      };
+      let formData = new FormData();
+      formData.append("file", file.file);
+      formData.append("fileType", file.file.name.split(".")[fileNameLen - 1]);
+      formData.append("updatePath", "there");
+
+      console.log(formData);
+      addImg(formData).then((res) => {
+        console.log(res);
+        this.ruleForm.advImgUrl = res.data;
+        this.imageUrl = res.data;
+      });
+    },
+    beforeAvatarUpload(file) {
+      const littleName = file.name.toLowerCase();
+      const copyFile = new File([file], littleName);
+
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
       }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
     },
     // 提交
     async submitForm(ruleForm) {
-      console.log(this.ruleForm)
+      console.log(this.ruleForm);
       const { res } = await addAdvList({
         advName: this.ruleForm.advName, //广告名称*
         advImgUrl: this.ruleForm.advImgUrl, //添加图片*
         advLocation: this.ruleForm.advLocation, //投放位置
         advUrl: this.ruleForm.advUrl, //链接
         advShow: this.ruleForm.advShow, //显示*
-        advSort: this.ruleForm.advSort //排序*
-      })
-      console.log(res)
+        advSort: this.ruleForm.advSort, //排序*
+      });
+      console.log(res);
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.$message({
-            message: '提交成功',
-            type: 'success'
-          })
-          this.$router.push(`/operation/advertisement/index`)
+            message: "提交成功",
+            type: "success",
+          });
+          this.$router.push(`/operation/advertisement/index`);
         } else {
-          console.log('未提交成功!!')
-          return false
+          console.log("未提交成功!!");
+          return false;
         }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 
 <style>
-.avatar-uploader
-.el-upload {
+.avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
   cursor: pointer;

@@ -37,7 +37,7 @@ public class PathUtils {
             }
         }
         /*
-         * album images
+         * album mp3
          */
         if (updateParams.getFileType().contains(FileConstants.MP3) ||
                 updateParams.getFileType().contains(FileConstants.FLAC)){

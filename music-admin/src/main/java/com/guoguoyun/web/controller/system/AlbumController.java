@@ -13,10 +13,12 @@ import com.guoguoyun.common.utils.DateUtils;
 import com.guoguoyun.system.QiniuUtils.UpdateParams;
 import com.guoguoyun.system.QiniuUtils.UploadService;
 import com.guoguoyun.system.domain.AppUser;
+import com.guoguoyun.system.domain.vo.AddAlbumArtVo;
 import com.guoguoyun.system.params.AlbumExeclParams;
 import com.guoguoyun.system.params.AlbumParams;
 import com.guoguoyun.system.params.BaseParam;
 import com.guoguoyun.system.service.IAppUserService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -87,7 +89,7 @@ public class AlbumController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:album:add')")
     @Log(title = "专辑管理-专辑库", businessType = BusinessType.INSERT)
     @PostMapping("/add")
-    public AjaxResult add(@RequestBody @Validated(BaseParam.add.class) AlbumParams albumParams) {
+    public AjaxResult add(@RequestBody @Validated(BaseParam.add.class) AlbumParams albumParams,@RequestBody AddAlbumArtVo[] addAlbumArtVos) {
         albumParams.setUpdateTime(DateUtils.getNowDate());
         albumParams.setCreateBy(getUsername());
         albumParams.setUpdateBy(getUsername());
@@ -107,6 +109,16 @@ public class AlbumController extends BaseController
 
 
         return AjaxResult.success("文件上传成功",uploadService.upload(file,updateParams));
+    }
+
+    /**
+     * 自动生成专辑编号
+     * @return
+     */
+    @GetMapping("/maxAlbumCode")
+    public AjaxResult getMaxWorkId() {
+
+        return  albumService.getMaxAlbumCode();
     }
 
 

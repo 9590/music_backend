@@ -3,7 +3,9 @@ package com.guoguoyun.web.controller.system;
 import java.util.List;
 
 
+import com.github.pagehelper.PageInfo;
 import com.guoguoyun.common.utils.DateUtils;
+import com.guoguoyun.system.domain.vo.AddAlbumArtVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,11 +40,23 @@ public class AlbumArtistController extends BaseController
      */
 
     @GetMapping("/list")
-    public TableDataInfo list(AlbumArtist albumArtist)
+    public AjaxResult list(AlbumArtist albumArtist)
+    {
+        List<AlbumArtist> list = albumArtistService.selectAlbumArtistList(albumArtist);
+        return AjaxResult.success(list);
+    }
+
+    /**
+     * 查询参与艺人列表
+     */
+
+    @GetMapping("/listPage")
+    public TableDataInfo listPage(AlbumArtist albumArtist)
     {
         startPage();
         List<AlbumArtist> list = albumArtistService.selectAlbumArtistList(albumArtist);
         return getDataTable(list);
+
     }
 
     /**
@@ -63,6 +77,7 @@ public class AlbumArtistController extends BaseController
     @PostMapping("/add")
     public AjaxResult add(@RequestBody AlbumArtist albumArtist)
     {
+
         albumArtist.setUpdateTime(DateUtils.getNowDate());
         albumArtist.setCreateBy(getUsername());
         albumArtist.setUpdateBy(getUsername());
@@ -72,7 +87,6 @@ public class AlbumArtistController extends BaseController
     /**
      * 修改参与艺人
      */
-
     @Log(title = "参与艺人", businessType = BusinessType.UPDATE)
     @PutMapping("/edit")
     public AjaxResult edit(@RequestBody AlbumArtist albumArtist)

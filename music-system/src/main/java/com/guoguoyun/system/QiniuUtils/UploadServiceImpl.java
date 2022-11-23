@@ -9,7 +9,8 @@ import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,15 +21,13 @@ import java.io.InputStream;
  * @date 2022/4/21 22:50
  */
 @Service
+@Data
+@ConfigurationProperties(prefix = "oss")
 public class UploadServiceImpl implements UploadService {
 
-    @Value("oss.accessKey")
     private String accessKey;
-    @Value("oss.secretKey")
     private String secretKey;
-    @Value("oss.bucket")
     private String bucket;
-    @Value("oss.domain")
     private String domain;
 
     @Override

@@ -27,6 +27,16 @@ public class AlbumAndArtist
 
     private Long albumArtistId;
 
+    private String artistName;
+
+    public String getArtistName() {
+        return artistName;
+    }
+
+    public void setArtistName(String artistName) {
+        this.artistName = artistName;
+    }
+
     public void setId(Long id)
     {
         this.id = id;
@@ -61,6 +71,7 @@ public class AlbumAndArtist
             .append("id", getId())
             .append("albumId", getAlbumId())
             .append("albumArtistId", getAlbumArtistId())
+                .append("artistName", getArtistName())
             .toString();
     }
 }

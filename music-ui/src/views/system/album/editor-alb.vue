@@ -89,16 +89,22 @@
                 placeholder="请选择艺人"
               >
                 <el-option
-                  v-for="item in options"
+                  v-for="item in searchData"
                   :key="item.id"
-                  :label="item.userName"
+                  :label="item.artistName"
                   :value="item.id"
                 >
                 </el-option>
               </el-select>
-              <br/>
+              <el-button
+                type="primary"
+                plain
+                icon="el-icon-plus"
+                @click="handleAdd"
+                >新增</el-button
+              >
             </el-form-item>
-            <div class="artBox">
+            <!-- <div class="artBox">
               <div class="boxTop">
                 <el-input
                   @input="artChange"
@@ -116,7 +122,7 @@
                   </li>
                 </ul>
               </div>
-            </div>
+            </div> -->
           </div>
           <el-form-item label="封面图片" prop="imgUrl">
             <el-upload
@@ -211,6 +217,21 @@
         </el-form>
       </div>
     </el-card>
+     <!-- 添加或修改参与艺人对话框 -->
+     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="110px">
+        <el-form-item label="参与艺人名称" prop="artistName">
+          <el-input v-model="form.artistName" placeholder="请输入参与艺人名称" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" placeholder="请输入备注" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitFormAdd">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -223,6 +244,7 @@ import {
   edit
 } from '@/api/album/album'
 import Cookies from 'js-cookie'
+import { listArtist,addArtist } from "@/api/album/artist";
 
 export default {
   data() {
@@ -238,6 +260,10 @@ export default {
       // return data;
     }
     return {
+      open: false,
+      title: "",
+      // 表单参数
+      form: {},
       header:{},
       //搜索到的数据
       searchData: [],
@@ -309,7 +335,8 @@ export default {
   created() {
     this.appUserList()
     this.songList()
-    this.artChange()
+    // this.artChange()
+    this.getArtistList()
     this.header = { Authorization: Cookies.get('Admin-Token') }
   },
   methods: {
@@ -340,15 +367,22 @@ export default {
       }
     },
     //搜索艺人
-    async artChange() {
-      let res = []
-      const { data } = await appUserList()
-      data.map((item) => {
-        if (item.userName.search(this.artData) != -1) {
-          res.push(item)
-        }
-      })
-      this.searchData = res
+    // async artChange() {
+    //   let res = []
+    //   const { data } = await appUserList()
+    //   data.map((item) => {
+    //     if (item.userName.search(this.artData) != -1) {
+    //       res.push(item)
+    //     }
+    //   })
+    //   this.searchData = res
+    // },
+      /** 查询参与艺人列表 */
+      getArtistList() {
+      listArtist(this.queryParams).then((response) => {
+        this.searchData = response.data;
+        console.log(response, "查询参与艺人列表");
+      });
     },
     //专辑价格
     priceChange() {
@@ -531,7 +565,50 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
-    }
+    },
+     /** 新增按钮操作 */
+     handleAdd() {
+      this.reset();
+      this.open = true;
+      this.title = "添加参与艺人";
+    },
+     /** 提交按钮 */
+     submitFormAdd() {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.id != null) {
+            updateArtist(this.form).then(response => {
+              // this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.getArtistList();
+            });
+          } else {
+            addArtist(this.form).then(response => {
+              // this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.getArtistList();
+            });
+          }
+        }
+      });
+    },
+    cancel(){
+      this.open = false;
+      this.reset();
+    },
+    reset() {
+      this.form = {
+        id: null,
+        artistName: null,
+        albumId: null,
+        createBy: null,
+        createTime: null,
+        updateBy: null,
+        updateTime: null,
+        remark: null
+      };
+      this.resetForm("form");
+    },
   },
   mounted() {
     this.list = this.states.map((item) => {

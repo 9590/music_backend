@@ -95,7 +95,7 @@
               </li>
               <li>
                 <ul>
-                  <li v-for="(item, index) in albumList" :key="index">
+                  <li v-for="(item, index) in albumList" :key="item.id">
                     <span>{{ item.albumName }}</span>
                     <div @click="addClick('album', item)">+</div>
                   </li>
@@ -193,24 +193,29 @@ export default {
         choicenessAlbums: "",
         hotSong: "",
       },
+      timer: null,
     };
   },
   created() {
     this.list();
   },
   methods: {
+    // 防抖
     async inputChange(type, val) {
-      if (type == "albumName") {
-        const { rows } = await userList({
-          albumName: val,
-        });
-        this.albumList = rows;
-      } else if (type == "songName") {
-        const { data } = await songList({
-          songName: val,
-        });
-        this.songList = data;
-      }
+      clearTimeout(this.timer);
+      this.timer = setTimeout(async () => {
+        if (type == "albumName") {
+          const { rows } = await userList({
+            albumName: val,
+          });
+          this.albumList = rows;
+        } else if (type == "songName") {
+          const { data } = await songList({
+            songName: val,
+          });
+          this.songList = data;
+        }
+      }, 500); // 设置时间
     },
     deleteClick(type, id) {
       let res = this[type];

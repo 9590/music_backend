@@ -13,13 +13,19 @@
           :rules="rules"
           ref="ruleForm"
           label-width="100px"
-          class="demo-ruleForm">
+          class="demo-ruleForm"
+        >
           <el-form-item label="专辑名称" prop="albumName">
-            <el-input class="card2-input" v-model="ruleForm.albumName"></el-input>
+            <el-input
+              class="card2-input"
+              v-model="ruleForm.albumName"
+            ></el-input>
           </el-form-item>
           <el-form-item label="英文名称" prop="albumEnglishName">
             <el-input
-              class="card2-input" v-model="ruleForm.albumEnglishName"></el-input>
+              class="card2-input"
+              v-model="ruleForm.albumEnglishName"
+            ></el-input>
           </el-form-item>
           <el-form-item label="专辑编号" prop="albumNumber">
             <el-input
@@ -95,17 +101,24 @@
                 placeholder="请选择艺人"
               >
                 <el-option
-                  v-for="item in options"
+                  v-for="item in searchData"
                   :key="item.id"
-                  :label="item.userName"
+                  :label="item.artistName"
                   :value="item.id"
                 >
                 </el-option>
               </el-select>
-              <br />
+
+              <el-button
+                type="primary"
+                plain
+                icon="el-icon-plus"
+                @click="handleAdd"
+                >新增</el-button
+              >
             </el-form-item>
 
-            <div class="artBox">
+            <!-- <div class="artBox">
               <div class="boxTop">
                 <el-input
                   @input="artChange"
@@ -123,18 +136,25 @@
                   </li>
                 </ul>
               </div>
-            </div>
+            </div> -->
           </div>
           <!-- TODO: -->
           <el-form-item label="封面图片" prop="imgUrl">
             <el-upload
               class="avatar-uploader"
-              :headers ="header"
-              :action="updateImg()"
+              :headers="header"
+              action=""
+              :http-request="httpRequest"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload">
-              <img v-if="dialogImageUrl" :src="dialogImageUrl" class="avatar" alt=""/>
+              :before-upload="beforeAvatarUpload"
+            >
+              <img
+                v-if="dialogImageUrl"
+                :src="dialogImageUrl"
+                class="avatar"
+                alt=""
+              />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
             <span style="color: #c0c0c0">建议尺寸:400*400</span>
@@ -219,13 +239,36 @@
         </el-form>
       </div>
     </el-card>
+     <!-- 添加或修改参与艺人对话框 -->
+     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="110px">
+        <el-form-item label="参与艺人名称" prop="artistName">
+          <el-input v-model="form.artistName" placeholder="请输入参与艺人名称" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" placeholder="请输入备注" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitFormAdd">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { appUserList, songList, add, getTreeList, addImg } from '@/api/album/album'
-import Cookies from 'js-cookie'
-import { listArtist } from '@/api/album/artist'
+import {
+  appUserList,
+  songList,
+  add,
+  getTreeList,
+  addImg,
+} from "@/api/album/album";
+
+import Cookies from "js-cookie";
+import { listArtist,addArtist } from "@/api/album/artist";
+
 export default {
   data() {
     const generateData = (_) => {
@@ -240,7 +283,12 @@ export default {
       // return data;
     };
     return {
-      header:{},
+      open: false,
+      title: "",
+      // 表单参数
+      form: {},
+      
+      header: {},
       //搜索到的数据
       searchData: [],
       //搜索内容需要的
@@ -276,6 +324,7 @@ export default {
         productionData: "",
         albumPrice: "",
       },
+
       rules: {
         albumName: [
           { required: true, message: "请输入专辑名称", trigger: "change" },
@@ -304,18 +353,19 @@ export default {
       },
     };
   },
+  watch: {},
   created() {
     this.appUserList();
     this.songList();
     this.getTreeList();
     this.artChange();
-    this.getArtistList()
-    this.header = { Authorization: Cookies.get('Admin-Token') }
+    this.getArtistList();
+    this.header = { Authorization: Cookies.get("Admin-Token") };
   },
   methods: {
     //更新歌曲图片
     updateImg() {
-      return `http://119.29.153.101/prod-api/system/album/addImg`
+      return `http://119.29.153.101/prod-api/system/album/addImg`;
     },
     //加入
     addClick(item) {
@@ -374,16 +424,13 @@ export default {
       this.options = data;
     },
 
-
     /** 查询参与艺人列表 */
     getArtistList() {
-      listArtist(this.queryParams).then(response => {
-        this.searchData = response.rows;
-        console.log(this.searchData)
-
+      listArtist(this.queryParams).then((response) => {
+        this.searchData = response.data;
+        console.log(response, "查询参与艺人列表");
       });
     },
-
 
     async songList() {
       const { data } = await songList();
@@ -396,14 +443,40 @@ export default {
     },
     // 封面图片
     handleAvatarSuccess(res, file) {
-      console.log(res.data,file)
+      console.log(res.data, file);
       this.dialogImageUrl = URL.createObjectURL(file.raw);
       // this.dialogImageUrl = file.response.url;
       this.ruleForm.imgUrl = res.data;
     },
+    httpRequest(file) {
+      let fileNameLen = file.file.name.split(".").length;
+      let data = {
+        file: file.file,
+        fileType: file.file.name.split(".")[fileNameLen - 1],
+        fileName: this.ruleForm.albumNumber,
+        updatePath: "one",
+      };
+      let formData = new FormData();
+      formData.append("file", file.file);
+      formData.append("fileType", file.file.name.split(".")[fileNameLen - 1]);
+      formData.append("fileName", this.ruleForm.albumNumber);
+      formData.append("updatePath", "one");
+
+      console.log(formData);
+      addImg(formData).then((res) => {
+        console.log(res);
+        this.ruleForm.imgUrl = res.data;
+        this.dialogImageUrl = res.data;
+      });
+    },
     beforeAvatarUpload(file) {
-      const littleName = file.name.toLowerCase()
-      const copyFile = new File([file], littleName)
+      if (this.ruleForm.albumNumber == "") {
+        this.$message.error("请输入专辑编号!");
+        return false;
+      }
+
+      const littleName = file.name.toLowerCase();
+      const copyFile = new File([file], littleName);
 
       const isJPG = file.type === "image/jpeg";
       const isLt2M = file.size / 1024 / 1024 < 2;
@@ -477,6 +550,49 @@ export default {
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.reset();
+      this.open = true;
+      this.title = "添加参与艺人";
+    },
+     /** 提交按钮 */
+     submitFormAdd() {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.id != null) {
+            updateArtist(this.form).then(response => {
+              // this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.getArtistList();
+            });
+          } else {
+            addArtist(this.form).then(response => {
+              // this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.getArtistList();
+            });
+          }
+        }
+      });
+    },
+    cancel(){
+      this.open = false;
+      this.reset();
+    },
+    reset() {
+      this.form = {
+        id: null,
+        artistName: null,
+        albumId: null,
+        createBy: null,
+        createTime: null,
+        updateBy: null,
+        updateTime: null,
+        remark: null
+      };
+      this.resetForm("form");
     },
   },
   mounted() {
