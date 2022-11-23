@@ -165,6 +165,8 @@ oss:
   secretKey: 6nfVeCyqD_3kRnFHG0xtG5SfqDeWQ6RVbbit19Md # 私钥
   bucket: hg-storage  #存储空间名称
 
+
+
 ##七牛云配置
 #oss:
 #  domain: http://zhang.butubird.xyz/    # 访问域名(默认使用七牛云测试域名)

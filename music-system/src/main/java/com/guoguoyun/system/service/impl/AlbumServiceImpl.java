@@ -72,9 +72,9 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         QueryWrapper<AlbumUser> albumUserQueryWrapper = new QueryWrapper<>();
         albumUserQueryWrapper.lambda().eq(AlbumUser::getAlbumId,albumByIdResponse.getId());
         List<Long> userIds = albumUserService.list(albumUserQueryWrapper).stream().map(t -> t.getUserId()).collect(Collectors.toList());
-        QueryWrapper<AppUser> appUserQueryWrapper = new QueryWrapper<>();
-        appUserQueryWrapper.lambda().in(AppUser::getId,userIds);
-        List<AppUser> appUsers = appUserService.list(appUserQueryWrapper);
+        QueryWrapper<AlbumArtist> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().in(AlbumArtist::getId,userIds);
+        List<AlbumArtist> appUsers = albumArtistService.list(queryWrapper);
         albumByIdResponse.setParticipateArtist(appUsers);
 
         QueryWrapper<AlbumSongRelation> albumSongRelationQueryWrapper = new QueryWrapper<>();
@@ -115,12 +115,12 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
             List<AlbumUser> albumUsers = albumUserService.list(albumUserQueryWrapper);
             StringBuffer stringBuffer = new StringBuffer();
             for (int i = 0; i < albumUsers.size(); i++) {
-                AppUser appUser = appUserService.getById(albumUsers.get(i).getUserId());
+                AlbumArtist appUser = albumArtistService.getById(albumUsers.get(i).getUserId());
                 if (ObjectUtil.isNotEmpty(appUser)){
                     if (i == albumUsers.size() - 1) {
-                        stringBuffer.append(appUser.getUserName());
+                        stringBuffer.append(appUser.getArtistName());
                     } else {
-                        stringBuffer.append(appUser.getUserName() + ",");
+                        stringBuffer.append(appUser.getArtistName() + ",");
                     }
                 }
 

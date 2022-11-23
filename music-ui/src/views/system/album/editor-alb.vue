@@ -563,9 +563,9 @@ export default {
         }
       })
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields()
-    },
+    // resetForm(formName) {
+    //   this.$refs[formName].resetFields()
+    // },
      /** 新增按钮操作 */
      handleAdd() {
       this.reset();

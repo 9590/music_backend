@@ -4,12 +4,10 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.guoguoyun.common.annotation.Excel;
 import com.guoguoyun.common.core.domain.BaseEntity;
+import com.guoguoyun.system.domain.AlbumArtist;
 import com.guoguoyun.system.domain.AlbumSong;
-import com.guoguoyun.system.domain.AppUser;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.Date;
 import java.util.List;
@@ -55,7 +53,7 @@ public class AlbumByIdResponse extends BaseEntity
 
     /** 参与艺人 */
     @Excel(name = "参与艺人")
-    private List<AppUser> participateArtist;
+    private List<AlbumArtist> participateArtist;
 
     private String participateArtistName;
 
@@ -111,11 +109,11 @@ public class AlbumByIdResponse extends BaseEntity
         this.includeSong = includeSong;
     }
 
-    public List<AppUser> getParticipateArtist() {
+    public List<AlbumArtist> getParticipateArtist() {
         return participateArtist;
     }
 
-    public void setParticipateArtist(List<AppUser> participateArtist) {
+    public void setParticipateArtist(List<AlbumArtist> participateArtist) {
         this.participateArtist = participateArtist;
     }
 }
