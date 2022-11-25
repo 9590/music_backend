@@ -45,7 +45,9 @@
           </el-form-item>
           <el-form-item label="添加图片" prop="imgUrls">
             <el-upload
+            :headers="headers"
               :action="uploadUrl"
+              :data="{fileType:fileType}"
               accept=".jpg,.jif,.png"
               list-type="picture-card"
               :on-success="handlePictureCardPreview"
@@ -53,6 +55,7 @@
               :on-remove="handleRemove"
               v-model="ruleForm.imgUrls"
               :file-list="imageUrl"
+              :before-upload="beforeUpload"
             >
               <i class="el-icon-plus"></i>
               <div
@@ -85,12 +88,15 @@
           <el-form-item label="添加视频" prop="videoUrl">
             <!-- action必选参数, 上传的地址 -->
             <el-upload
+            :headers="headers"
               class="avatar-uploader el-upload--text"
               :action="uploadUrl"
+              :data="{fileType:fileType}"
               :show-file-list="false"
               :on-success="handleVideoSuccess"
               :before-upload="beforeUploadVideo"
               :on-remove="handleRemoves"
+              
             >
               <video
                 v-if="ruleForm.videoUrl != [] && videoFlag == false"
@@ -134,13 +140,15 @@ import {
   editDynList,
 } from "@/api/adynamic/dynamic";
 import { getToken } from "@/utils/auth";
+import Cookies from "js-cookie";
 export default {
   data() {
     return {
-      uploadUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
-      // headers: {
-      //   Authorization: "Bearer " + getToken(),
-      // },
+      uploadUrl: process.env.VUE_APP_BASE_API + "/system/album/addImg", // 上传的图片服务器地址
+      fileType:'jpg',
+      headers: {
+        Authorization: Cookies.get("Admin-Token")
+      },
       //图片路径
       imageUrl: [],
       // 艺人
@@ -167,6 +175,11 @@ export default {
     this.getDynList();
   },
   methods: {
+    beforeUpload(file){
+      let fileNameLen = file.name.split(".").length;
+      this.fileType=file.name.split(".")[fileNameLen - 1]
+      console.log(this.fileType)
+    },
     // 获取艺人并赋值
     async UserDynList() {
       const { data } = await UserDynList();
@@ -260,9 +273,9 @@ export default {
       console.log(file, fileList);
     },
     handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
+      this.dialogImageUrl = file.data;
       this.dialogVisible = true;
-      this.ruleForm.imgUrls.push({ url: file.url });
+      this.ruleForm.imgUrls.push({ url: file.data });
     },
     handleVideoCardPreview(file) {
       console.log(file);

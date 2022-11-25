@@ -37,6 +37,8 @@
           </el-form-item>
           <el-form-item label="轮播图" prop="shopImgs">
             <el-upload
+            :headers="headers"
+            
               :action="uploadUrl"
               list-type="picture-card"
               :on-success="handlePictureCardPreview"
@@ -108,13 +110,14 @@
 <script>
 import { manAdd, classIfication } from "@/api/amallManagement/amallManagement";
 import { getToken } from "@/utils/auth";
+import Cookies from "js-cookie";
 export default {
   data() {
     return {
-      uploadUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
-      // headers: {
-      //   Authorization: "Bearer " + getToken(),
-      // },
+      uploadUrl: process.env.VUE_APP_BASE_API + "/system/album/addImg", // 上传的图片服务器地址
+      headers: {
+        Authorization: Cookies.get("Admin-Token")
+      },
       dialogVisible: false,
       disabled: false,
       input2: "",

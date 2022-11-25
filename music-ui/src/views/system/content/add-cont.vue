@@ -20,7 +20,7 @@
             <el-input class="card2-input" v-model="ruleForm.name"></el-input>
           </el-form-item>
 
-          <el-form-item label="略缩图" prop="photo">
+          <el-form-item label="缩略图" prop="photo">
             <el-upload
               action="uploadUrl"
               list-type="picture-card"

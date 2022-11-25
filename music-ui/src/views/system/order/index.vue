@@ -223,9 +223,17 @@ export default {
       total: 0,
       // 购买类型
       options: [
+        // {
+        //   id: "",
+        //   name: "全部",
+        // },
         {
-          id: "",
-          name: "全部",
+          id: "1500770401594195968",
+          name: "专辑",
+        },
+        {
+          id: "1500770531101720576",
+          name: "曲目",
         },
       ],
       create: [], //购买时间范围
@@ -317,7 +325,7 @@ export default {
     async typeOrdList() {
       await typeOrdList().then((res) => {
         //  下拉列表框
-        this.options = [...this.options, ...res.data];
+        // this.options = [...this.options, ...res.data];
       });
     },
     handleSizeChange(val) {

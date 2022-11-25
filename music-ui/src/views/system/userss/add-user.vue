@@ -79,6 +79,7 @@
           <el-form-item label="头像" prop="userAvatar" class="card2-el">
             <!-- :headers="headers" -->
             <el-upload
+            :headers="headers"
               v-model="ruleForm.userAvatar"
               class="avatar-uploader"
               :action="uploadUrl"
@@ -113,6 +114,7 @@
 // import { getToken } from "@/utils/auth";
 import axios from "axios";
 import { add } from "@/api/userss/userss";
+import Cookies from "js-cookie";
 let id = 0;
 export default {
   data() {
@@ -124,10 +126,10 @@ export default {
       //选择地区
       adressArray: null,
       // 头像上传
-      uploadUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
-      // headers: {
-      //   Authorization: "Bearer " + getToken(),
-      // },
+      uploadUrl: process.env.VUE_APP_BASE_API + "/system/album/addImg", // 上传的图片服务器地址
+      headers: {
+        Authorization: Cookies.get("Admin-Token")
+      },
       imageUrl: "", //图片地址
       //    性别
       options: [

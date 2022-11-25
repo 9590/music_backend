@@ -12,30 +12,30 @@
       <div class="card2">
         <div class="card2-div">
           <el-row>
-            <el-col :span="8"
-              ><div class="grid-content bg-purple">
-                <span class="">投稿人名称: {{ ruleForm.userName }}</span>
-              </div></el-col
-            >
-            <el-col :span="8"
-              ><div class="grid-content bg-purple-light">
+            <el-col :span="8"></el-col>
+            <div class="grid-content bg-purple">
+              <span class="">投稿人名称: {{ ruleForm.userName }}</span>
+            </div>
+            </el-col>
+            <el-col :span="8">
+              <div class="grid-content bg-purple-light">
                 <span>当前状态:{{ ruleForm.checkStateName }}</span>
-              </div></el-col
-            >
+              </div>
+            </el-col>
           </el-row>
         </div>
         <div class="card2-div">
           <el-row>
-            <el-col :span="8"
-              ><div class="grid-content bg-purple">
+            <el-col :span="8">
+              <div class="grid-content bg-purple">
                 <span>投稿人账号:{{ ruleForm.userAccount }}</span>
-              </div></el-col
-            >
-            <el-col :span="8"
-              ><div class="grid-content bg-purple-light">
+              </div>
+            </el-col>
+            <el-col :span="8">
+              <div class="grid-content bg-purple-light">
                 <span>投稿时间:{{ ruleForm.createTime }}</span>
-              </div></el-col
-            >
+              </div>
+            </el-col>
           </el-row>
         </div>
       </div>
@@ -43,12 +43,7 @@
     <!--  -->
     <el-card class="box-card" style="margin-bottom: 10px">
       <div class="card3">
-        <el-form
-          :model="ruleForm"
-          ref="ruleForm"
-          label-width="100px"
-          class="demo-ruleForm"
-        >
+        <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
           <el-form-item label="内容" prop="content">
             <!-- <quill-editor
               v-model="ruleForm.content"
@@ -57,7 +52,7 @@
             <el-input type="textarea" v-model="ruleForm.content"></el-input>
           </el-form-item>
           <el-form-item label="图片" prop="">
-            <el-upload
+            <!-- <el-upload
               :file-list="fileList"
               :action="uploadUrl"
               list-type="picture-card"
@@ -66,48 +61,37 @@
               :on-success="handleSuccess"
             >
               <i class="el-icon-plus"></i>
-            </el-upload>
-            <el-dialog :visible.sync="dialogVisible">
+            </el-upload> -->
+            <!-- <el-dialog :visible.sync="dialogVisible">
               <img width="100%" :src="dialogImageUrl" alt="" />
-            </el-dialog>
+            </el-dialog> -->
+            <el-upload class="avatar-uploader" :headers="header" action="" :http-request="httpRequest"
+              :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+              <img v-if="dialogImageUrl" :src="dialogImageUrl" class="avatar" alt="" />
+              <i v-else class="el-icon-plus avatar-uploader-icon avatar" ></i>
+            </el-upload>
           </el-form-item>
           <div>
             <el-form-item label="相关专辑" prop="">
-              <div
-                style="
+              <div style="
                   border: 1px solid #c0c0c0;
                   width: 400px;
                   min-height: 40px;
                   float: left;
-                "
-              >
-                <el-tag
-                  v-model="ruleForm.next"
-                  v-for="tag in tags"
-                  :key="tag.id"
-                  closable
-                  :type="tag.type"
-                  style="margin: 5px"
-                  @close="handleClose(tag)"
-                >
+                ">
+                <el-tag v-model="ruleForm.next" v-for="tag in tags" :key="tag.id" closable :type="tag.type"
+                  style="margin: 5px" @close="handleClose(tag)">
                   {{ tag.albumName }}
                 </el-tag>
               </div>
-              <div
-                style="
+              <div style="
                   border: 1px solid #c0c0c0;
                   width: 200px;
                   float: left;
                   margin-left: 10px;
-                "
-              >
-                <el-input
-                  class="card2-input"
-                  @input="inputChange(ruleForm.link)"
-                  v-model="ruleForm.link"
-                  placeholder="搜索专辑"
-                  style="width: 150px; margin: 5px"
-                ></el-input>
+                ">
+                <el-input class="card2-input" @input="inputChange(ruleForm.link)" v-model="ruleForm.link"
+                  placeholder="搜索专辑" style="width: 150px; margin: 5px"></el-input>
                 <ul class="ulStyle">
                   <li v-for="(item, index) in albumList" :key="index">
                     <p>{{ item.albumName }}</p>
@@ -122,9 +106,7 @@
             <el-checkbox v-model="checked" style="color: red">停用</el-checkbox>
           </el-form-item>
           <el-form-item label="" prop="">
-            <el-button class="card3-btn" type="primary" @click="submitClick"
-              >保存</el-button
-            >
+            <el-button class="card3-btn" type="primary" @click="submitClick">保存</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -134,10 +116,12 @@
 
 <script>
 import { getInfo, edit } from "@/api/contribution/contribution";
-import { userList } from "@/api/album/album";
+import { userList, addImg } from "@/api/album/album";
+import Cookies from "js-cookie";
 export default {
   data() {
     return {
+      header: { Authorization: Cookies.get("Admin-Token") },
       fileList: [],
       dialogImageUrl: "",
       dialogVisible: false,
@@ -163,6 +147,47 @@ export default {
     this.userList();
   },
   methods: {
+    httpRequest(file) {
+      let fileNameLen = file.file.name.split(".").length;
+      let data = {
+        file: file.file,
+        fileType: file.file.name.split(".")[fileNameLen - 1],
+        fileName: this.ruleForm.albumNumber,
+        updatePath: "one",
+      };
+      let formData = new FormData();
+      formData.append("file", file.file);
+      formData.append("fileType", file.file.name.split(".")[fileNameLen - 1])
+
+      console.log(formData);
+      addImg(formData).then((res) => {
+        console.log(res);
+        this.ruleForm.imgUrl = res.data;
+        this.dialogImageUrl = res.data;
+      });
+    },
+    // 封面图片
+    handleAvatarSuccess(res, file) {
+      console.log(res.data, file);
+      this.dialogImageUrl = URL.createObjectURL(file.raw);
+      // this.dialogImageUrl = file.response.url;
+      this.ruleForm.imgUrl = res.data;
+    },
+    beforeAvatarUpload(file) {
+      const littleName = file.name.toLowerCase();
+      const copyFile = new File([file], littleName);
+
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    },
     submitClick() {
       let albumOfIds = [];
       for (let key in this.tags) {
@@ -275,16 +300,20 @@ li {
   list-style: none;
   text-indent: 10px;
 }
+
 ul {
   padding: 0;
 }
+
 .ulStyle {
   height: 200px;
   overflow: auto;
+
   li {
     display: flex;
     align-items: center;
     height: 35px;
+
     span {
       display: block;
       height: 20px;
@@ -299,6 +328,7 @@ ul {
     }
   }
 }
+
 .advertisement {
   .box-card {
     .card-div {
@@ -306,6 +336,7 @@ ul {
       height: 30px;
       margin-bottom: 20px;
     }
+
     .card1 {
       height: 24px;
       font: 18px/24px "";
@@ -313,27 +344,33 @@ ul {
       padding-left: 10px;
       border-left: 5px solid orange;
     }
+
     .card2 {
       .card2-div {
         margin-top: 10px;
         margin-bottom: 10px;
       }
+
       .card2-sp {
         margin-right: 30px;
+
         .card2-sp-span {
           margin-left: 20px;
           margin-right: 10px;
         }
       }
+
       .card2-btn {
         width: 100px;
         margin-left: 20px;
       }
     }
+
     .card3 {
       ::v-deep .ql-toolbar {
         background-color: rgb(243, 241, 241);
       }
+
       // height: 400px;
       ::v-deep .el-table th {
         background-color: rgb(216, 215, 215);
@@ -341,28 +378,41 @@ ul {
         font: 16px/20px "Microsoft Yahei";
         text-align: center;
       }
+
       ::v-deep .cell {
         text-align: center;
       }
+
       .card3-div {
         font-size: 30px;
         font-weight: 900;
       }
+
       .block {
         margin-top: 20px;
         margin-bottom: 20px;
         float: right;
+
         ::v-deep .active {
           background-color: orange;
         }
       }
+
       .editor {
         // height: 300px;
       }
+
       .card3-btn {
         width: 100px;
       }
     }
   }
+  .avatar {
+    line-height: 178px;
+  width: 178px;
+  height: 178px;
+  display: block;
+  border: 1px solid #ccc;
+}
 }
 </style>

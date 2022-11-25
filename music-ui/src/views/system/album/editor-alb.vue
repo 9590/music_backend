@@ -127,12 +127,19 @@
           <el-form-item label="封面图片" prop="imgUrl">
             <el-upload
               class="avatar-uploader"
-              :headers ="header"
-              :action="updateImg()"
+              :headers="header"
+              action=""
+              :http-request="httpRequest"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload">
-              <img v-if="dialogImageUrl" :src="dialogImageUrl" class="avatar" alt=""/>
+              :before-upload="beforeAvatarUpload"
+            >
+              <img
+                v-if="dialogImageUrl"
+                :src="dialogImageUrl"
+                class="avatar"
+                alt=""
+              />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
             <span style="color: #c0c0c0">建议尺寸:400*400</span>
@@ -241,11 +248,11 @@ import {
   getTreeList,
   appUserList,
   songList,
-  edit
+  edit,
+  addImg
 } from '@/api/album/album'
 import Cookies from 'js-cookie'
 import { listArtist,addArtist } from "@/api/album/artist";
-
 export default {
   data() {
     const generateData = (_) => {
@@ -427,13 +434,19 @@ export default {
 
     // 封面图片
     handleAvatarSuccess(res, file) {
-      console.log(res.data,file)
+      console.log(res.data, file);
       this.dialogImageUrl = URL.createObjectURL(file.raw);
+      // this.dialogImageUrl = file.response.url;
       this.ruleForm.imgUrl = res.data;
     },
     beforeAvatarUpload(file) {
-      const littleName = file.name.toLowerCase()
-      const copyFile = new File([file], littleName)
+      if (this.ruleForm.albumNumber == "") {
+        this.$message.error("请输入专辑编号!");
+        return false;
+      }
+
+      const littleName = file.name.toLowerCase();
+      const copyFile = new File([file], littleName);
 
       const isJPG = file.type === "image/jpeg";
       const isLt2M = file.size / 1024 / 1024 < 2;
@@ -446,6 +459,21 @@ export default {
       }
       return isJPG && isLt2M;
     },
+    // beforeAvatarUpload(file) {
+    //   const littleName = file.name.toLowerCase()
+    //   const copyFile = new File([file], littleName)
+
+    //   const isJPG = file.type === "image/jpeg";
+    //   const isLt2M = file.size / 1024 / 1024 < 2;
+
+    //   if (!isJPG) {
+    //     this.$message.error("上传头像图片只能是 JPG 格式!");
+    //   }
+    //   if (!isLt2M) {
+    //     this.$message.error("上传头像图片大小不能超过 2MB!");
+    //   }
+    //   return isJPG && isLt2M;
+    // },
     //分类
     async getTreeList(classId) {
       const { data } = await getTreeList()
@@ -479,6 +507,27 @@ export default {
         }
       }
       console.log('ruleForm', this.ruleForm)
+    },
+    httpRequest(file) {
+      let fileNameLen = file.file.name.split(".").length;
+      let data = {
+        file: file.file,
+        fileType: file.file.name.split(".")[fileNameLen - 1],
+        fileName: this.ruleForm.albumNumber,
+        updatePath: "one",
+      };
+      let formData = new FormData();
+      formData.append("file", file.file);
+      formData.append("fileType", file.file.name.split(".")[fileNameLen - 1]);
+      formData.append("fileName", this.ruleForm.albumNumber);
+      formData.append("updatePath", "one");
+
+      console.log(formData);
+      addImg(formData).then((res) => {
+        console.log(res);
+        this.ruleForm.imgUrl = res.data;
+        this.dialogImageUrl = res.data;
+      });
     },
     // 封面图片
     handleRemove(file) {

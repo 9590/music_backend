@@ -150,31 +150,37 @@
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="上传SQ音频" prop="sqUrl"
-            ><span style="color: #975252">(高格式MP3文件，上传成功后SQ自动打钩，原文件将被覆盖)</span>
+            ><span style="color: #975252"
+              >(高格式MP3文件，上传成功后SQ自动打钩，原文件将被覆盖)</span
+            >
             <el-upload
               class="upload-demo"
-              :action="uploadFile"
+              action="uploadFile"
+              :http-request="httpRequestSq"
               v-model="ruleForm.sqUrl"
               :on-success="handleAvatarSuccess"
               :on-preview="clickHasUploadFile"
               :on-remove="handleAvatarRemove"
+              :before-upload="beforeUploadSq"
               :limit="1"
-              :file-list="sqUrl"
             >
               <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </el-form-item>
           <el-form-item label="上传UPM音频" prop="upmUrl"
-            ><span style="color: #975252">(flac文件，上传成功后UPM自动打钩，原文件将被覆盖)</span>
+            ><span style="color: #975252"
+              >(flac文件，上传成功后UPM自动打钩，原文件将被覆盖)</span
+            >
             <el-upload
               class="upload-demo"
               :action="uploadFile"
+              :http-request="httpRequestUpm"
               v-model="ruleForm.upmUrl"
               :on-success="handleAvatarSuccess2"
               :on-preview="clickHasUploadFile"
               :on-remove="handleAvatarRemove2"
+              :before-upload="beforeUploadUpm"
               :limit="1"
-              :file-list="upmUrl"
             >
               <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
@@ -196,6 +202,7 @@
 
 <script>
 import { getInfo, edit } from "@/api/tracks/tracks";
+import { addImg } from "@/api/album/album";
 export default {
   data() {
     return {
@@ -267,6 +274,58 @@ export default {
     this.getInfo();
   },
   methods: {
+    httpRequestSq(file) {
+      let fileNameLen = file.file.name.split(".").length;
+      let formData = new FormData();
+      formData.append("file", file.file);
+      formData.append("fileType", file.file.name.split(".")[fileNameLen - 1]);
+      formData.append("updatePath", "two");
+
+      console.log(formData);
+      addImg(formData).then((res) => {
+        console.log(res);
+        this.ruleForm.sqUrl = res.data;
+        // this.dialogImageUrl = res.data;
+      });
+    },
+    beforeUploadSq(file) {
+      console.log(file);
+      var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
+      const extension = testmsg === "mp3";
+      if (!extension) {
+        this.$message({
+          message: "上传文件只能是mp3格式！",
+          type: "error",
+        });
+      }
+      return extension;
+    },
+    beforeUploadUpm(file) {
+      console.log(file);
+      var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
+      const extension = testmsg === "flac";
+      if (!extension) {
+        this.$message({
+          message: "上传文件只能是flac格式！",
+          type: "error",
+        });
+      }
+      return extension;
+    },
+    httpRequestUpm(file) {
+      let fileNameLen = file.file.name.split(".").length;
+      let formData = new FormData();
+      formData.append("file", file.file);
+      formData.append("fileType", file.file.name.split(".")[fileNameLen - 1]);
+      formData.append("updatePath", "two");
+
+      console.log(formData);
+      addImg(formData).then((res) => {
+        console.log(res);
+        this.ruleForm.upmUrl = res.data;
+        // this.dialogImageUrl = res.data;
+      });
+    },
     //获取数据
     async getInfo() {
       const { data } = await getInfo(this.$route.params.id);

@@ -159,7 +159,7 @@ export default {
     getList() {
       this.loading = true;
       listArtist(this.queryParams).then(response => {
-        this.artistList = response.rows;
+        this.artistList = response.data;
         this.total = response.total;
         this.loading = false;
       });

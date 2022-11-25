@@ -22,6 +22,7 @@ public class PathUtils {
 
         String type = fileName.substring(index);
 
+
         /*
          * album images
          */

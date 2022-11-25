@@ -39,7 +39,7 @@
               placeholder="满多少元可用，0元为无门槛"
               @input="rulesChange"
             ></el-input
-            ><span style="margin-left: 12px">元</span>
+            ><span style="margin-left: 12px"></span>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
             <el-input

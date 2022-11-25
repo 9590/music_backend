@@ -36,13 +36,15 @@
           </el-form-item>
           <!-- TODO: 添加图片-->
           <el-form-item label="添加图片" prop="advImgUrl">
-            <el-upload
+           <el-upload
               class="avatar-uploader"
-              :action="uploadUrl"
+              action=""
+              :http-request="httpRequest"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
-              v-model="ruleForm.advImgUrl">
-              <img v-if="ruleForm.advImgUrl" :src="ruleForm.advImgUrl" class="avatar" alt=""/>
+              v-model="ruleForm.advImgUrl"
+            >
+              <img v-if="ruleForm.advImgUrl" :src="ruleForm.advImgUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
@@ -88,6 +90,7 @@
 
 <script>
 import { getInAdvList, editAdvList } from "@/api/advertisement/ment";
+import { addImg } from "@/api/album/album";
 import { getToken } from "@/utils/auth";
 export default {
   data() {
@@ -144,15 +147,40 @@ export default {
 
     },
     // 规定图片上传规范
-    handleAvatarSuccess(res, file) {
+    // handleAvatarSuccess(res, file) {
 
-      this.imageUrl = process.env.VUE_APP_BASE_API + res.fileName;
-      if (res.code == 200) {
-        this.imageUrl = res.url;
-        this.ruleForm.advImgUrl = res.url;
-      } else {
-        this.$message.error("图片插入失败");
-      }
+    //   this.imageUrl = process.env.VUE_APP_BASE_API + res.fileName;
+    //   if (res.code == 200) {
+    //     this.imageUrl = res.url;
+    //     this.ruleForm.advImgUrl = res.url;
+    //   } else {
+    //     this.$message.error("图片插入失败");
+    //   }
+    // },
+     handleAvatarSuccess(res, file) {
+      console.log(res.data, file);
+      this.dialogImageUrl = URL.createObjectURL(file.raw);
+      // this.dialogImageUrl = file.response.url;
+      this.ruleForm.imgUrl = res.data;
+    },
+    httpRequest(file) {
+      let fileNameLen = file.file.name.split(".").length;
+      let data = {
+        file: file.file,
+        fileType: file.file.name.split(".")[fileNameLen - 1],
+        updatePath: "one",
+      };
+      let formData = new FormData();
+      formData.append("file", file.file);
+      formData.append("fileType", file.file.name.split(".")[fileNameLen - 1]);
+      formData.append("updatePath", "there");
+
+      console.log(formData);
+      addImg(formData).then((res) => {
+        console.log(res);
+        this.ruleForm.advImgUrl = res.data;
+        this.imageUrl = res.data;
+      });
     },
     //提交
     async submitForm(ruleForm) {

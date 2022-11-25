@@ -45,10 +45,13 @@
           </el-form-item>
           <el-form-item label="添加图片" prop="imgUrls">
             <el-upload
+            :headers="headers"
               :action="uploadUrl"
+              :data="{fileType:fileType}"
               accept=".jpg,.jif,.png"
               list-type="picture-card"
               :on-success="handlePictureCardPreview"
+              :before-upload="beforeUpload"
               :limit="10"
               :on-remove="handleRemove"
               v-model="ruleForm.imgUrls"
@@ -84,8 +87,10 @@
           <el-form-item label="添加视频" prop="videoUrl">
             <!-- action必选参数, 上传的地址 -->
             <el-upload
+            :headers="headers"
               class="avatar-uploader el-upload--text"
               :action="uploadUrl"
+              :data="{fileType:fileType}"
               :show-file-list="false"
               :on-success="handleVideoSuccess"
               :before-upload="beforeUploadVideo"
@@ -129,13 +134,15 @@
 <script>
 import { addDynList, UserDynList } from "@/api/adynamic/dynamic";
 import { getToken } from "@/utils/auth";
+import Cookies from "js-cookie";
 export default {
   data() {
     return {
-      uploadUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
-      // headers: {
-      //   Authorization: "Bearer " + getToken(),
-      // },
+      uploadUrl: process.env.VUE_APP_BASE_API + "/system/album/addImg", // 上传的图片服务器地址
+      fileType:'jpg',
+      headers: {
+        Authorization: Cookies.get("Admin-Token")
+      },
       // 艺人
       isDisplayList: [
         // {id:"",
@@ -166,6 +173,11 @@ export default {
     this.UserDynList(); //艺人信息
   },
   methods: {
+    beforeUpload(file){
+      let fileNameLen = file.name.split(".").length;
+      this.fileType=file.name.split(".")[fileNameLen - 1]
+      console.log(this.fileType)
+    },
     // 获取艺人并赋值
     async UserDynList() {
       // await UserDynList().then((res) => {

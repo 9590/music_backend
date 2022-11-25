@@ -76,7 +76,7 @@
             </el-form-item>
           </div>
           <!-- TODO: 添加图片-->
-          <el-form-item label="略缩图" prop="articleImgurl">
+          <el-form-item label="缩略图" prop="articleImgurl">
             <!-- <el-upload
               class="avatar-uploader"
               
@@ -91,12 +91,14 @@
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
             <span style="color: #c0c0c0">建议尺寸300*300</span> -->
-            <el-upload
+            <!-- <el-upload
               :action="uploadUrl"
               list-type="picture-card"
               :on-success="handleAvatarSuccess"
               :on-remove="handleRemove"
               v-model="ruleForm.articleImgurl"
+              :multiple="false"
+              :limit="1"
             >
               <i class="el-icon-plus"></i>
               <div
@@ -106,6 +108,17 @@
               >
                 建议尺寸大小为300*300
               </div>
+            </el-upload> -->
+            <el-upload
+              class="avatar-uploader"
+              action=""
+              :http-request="httpRequest"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              v-model="ruleForm.articleImgurl"
+            >
+              <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
           <!-- TODO: -->
@@ -195,7 +208,8 @@
 <script>
 import { addArticleList } from "@/api/article/article";
 import { listClaList } from "@/api/aclassification/classification";
-import { userList } from "@/api/album/album";
+import { userList,addImg } from "@/api/album/album";
+
 export default {
   data() {
     return {
@@ -260,6 +274,25 @@ export default {
     this.userList();
   },
   methods: {
+    httpRequest(file) {
+      let fileNameLen = file.file.name.split(".").length;
+      let data = {
+        file: file.file,
+        fileType: file.file.name.split(".")[fileNameLen - 1],
+        updatePath: "one",
+      };
+      let formData = new FormData();
+      formData.append("file", file.file);
+      formData.append("fileType", file.file.name.split(".")[fileNameLen - 1]);
+      formData.append("updatePath", "there");
+
+      console.log(formData);
+      addImg(formData).then((res) => {
+        console.log(res);
+        this.ruleForm.articleImgurl = res.data;
+        this.imageUrl = res.data;
+      });
+    },
     tagClick(val) {
       let res = this.ruleForm.articleTag;
       let flag = true;
@@ -287,18 +320,24 @@ export default {
       this.options = rows;
     },
     // 规定图片上传规范
+    // handleAvatarSuccess(res, file) {
+    //   console.log(this.ruleForm.articleImgurl);
+    //   console.log("res", res);
+    //   console.log("file", file);
+    //   console.log(process.env.VUE_APP_BASE_API);
+    //   this.imageUrl = process.env.VUE_APP_BASE_API + res.fileName;
+    //   if (res.code == 200) {
+    //     this.imageUrl = res.url;
+    //     this.ruleForm.articleImgurl = res.url;
+    //   } else {
+    //     this.$message.error("图片插入失败");
+    //   }
+    // },
     handleAvatarSuccess(res, file) {
-      console.log(this.ruleForm.articleImgurl);
-      console.log("res", res);
-      console.log("file", file);
-      console.log(process.env.VUE_APP_BASE_API);
-      this.imageUrl = process.env.VUE_APP_BASE_API + res.fileName;
-      if (res.code == 200) {
-        this.imageUrl = res.url;
-        this.ruleForm.articleImgurl = res.url;
-      } else {
-        this.$message.error("图片插入失败");
-      }
+      console.log(res.data, file);
+      this.dialogImageUrl = URL.createObjectURL(file.raw);
+      // this.dialogImageUrl = file.response.url;
+      this.imageUrl = res.data;
     },
     // 移除图片
     handleRemove(file) {

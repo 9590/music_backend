@@ -43,7 +43,7 @@ public class FileConstants {
 
     public static final String FLAC = "flac";
 
-    public static final String DEFAULT = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201706%2F04%2F20170604150451_Wew5N.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653191508&t=1ed5762df51f62a770a4aebdb47e0006\n";
+    public static final String DEFAULT = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201706%2F04%2F20170604150451_Wew5N.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653191508&t=1ed5762df51f62a770a4aebdb47e0006";
 
 
 
