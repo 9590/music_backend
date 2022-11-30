@@ -3,7 +3,7 @@
   <div class="advertisement">
     <!-- 商品管理 -->
     <el-card class="box-card" style="margin-bottom: 10px">
-      <div class="card1">用户管理</div>
+      <div class="card1">会员管理</div>
     </el-card>
     <!-- input&btn -->
     <el-card class="box-card" style="margin-bottom: 10px">

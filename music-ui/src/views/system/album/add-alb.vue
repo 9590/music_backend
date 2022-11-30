@@ -1,4 +1,4 @@
-// 添加专辑管理
+<!--添加专辑管理-->
 <template>
   <div class="advertisement">
     <!-- 专辑管理 -->
@@ -75,19 +75,6 @@
               >
               </el-tree>
             </el-select>
-            <!-- <el-select
-              class="card2-input"
-              v-model="ruleForm.albumClassifyId"
-              placeholder="请选择"
-            >
-              <el-option
-                v-for="item in positionList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select> -->
           </el-form-item>
           <div class="artStyle">
             <el-form-item label="参与艺人" prop="userIds">
@@ -287,7 +274,7 @@ export default {
       title: "",
       // 表单参数
       form: {},
-      
+
       header: {},
       //搜索到的数据
       searchData: [],
@@ -464,7 +451,6 @@ export default {
 
       console.log(formData);
       addImg(formData).then((res) => {
-        console.log(res);
         this.ruleForm.imgUrl = res.data;
         this.dialogImageUrl = res.data;
       });

@@ -234,10 +234,7 @@ export default {
         return false;
       }
     },
-    // uploadVideoProcess(event, file, fileList) {
-    //   this.videoFlag = true;
-    //   this.videoUploadPercent = file.percentage.toFixed(0);
-    // },
+
     handleVideoSuccess(res, file) {
       //获取上传视频地址
       this.videoFlag = false;

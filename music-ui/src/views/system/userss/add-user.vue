@@ -111,7 +111,6 @@
   </div>
 </template>
 <script>
-// import { getToken } from "@/utils/auth";
 import axios from "axios";
 import { add } from "@/api/userss/userss";
 import Cookies from "js-cookie";
@@ -211,7 +210,7 @@ export default {
         });
         setTimeout(() => {
           this.$router.push({
-            path: "/all/userss",
+            path: "/all/userss/index",
           });
         }, 1000);
       }

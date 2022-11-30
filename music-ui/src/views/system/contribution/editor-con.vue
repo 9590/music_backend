@@ -44,6 +44,13 @@
     <el-card class="box-card" style="margin-bottom: 10px">
       <div class="card3">
         <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="标题" prop="title">
+            <!-- <quill-editor
+              v-model="ruleForm.content"
+              class="editor"
+            ></quill-editor> -->
+            <el-input placeholder="请输入标题" v-model="ruleForm.title"></el-input>
+          </el-form-item>
           <el-form-item label="内容" prop="content">
             <!-- <quill-editor
               v-model="ruleForm.content"
@@ -65,8 +72,13 @@
             <!-- <el-dialog :visible.sync="dialogVisible">
               <img width="100%" :src="dialogImageUrl" alt="" />
             </el-dialog> -->
-            <el-upload class="avatar-uploader" :headers="header" action="" :http-request="httpRequest"
-              :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+            <el-upload class="avatar-uploader"
+                       :headers="header"
+                       action=""
+                       :http-request="httpRequest"
+                       :show-file-list="false"
+                       :on-success="handleAvatarSuccess"
+                       :before-upload="beforeAvatarUpload">
               <img v-if="dialogImageUrl" :src="dialogImageUrl" class="avatar" alt="" />
               <i v-else class="el-icon-plus avatar-uploader-icon avatar" ></i>
             </el-upload>
@@ -170,7 +182,7 @@ export default {
     handleAvatarSuccess(res, file) {
       console.log(res.data, file);
       this.dialogImageUrl = URL.createObjectURL(file.raw);
-      // this.dialogImageUrl = file.response.url;
+      this.dialogImageUrl = file.response.url;
       this.ruleForm.imgUrl = res.data;
     },
     beforeAvatarUpload(file) {

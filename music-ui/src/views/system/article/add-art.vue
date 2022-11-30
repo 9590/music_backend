@@ -47,14 +47,12 @@
                   allow-create
                   default-first-option
                   placeholder="请输入标签内容"
-                  style="width: 200px"
-                >
+                  style="width: 200px">
                   <el-option
-                    v-for="item in articleTag"
+                    v-for="item in tags"
                     :key="item.value"
                     :label="item.label"
-                    :value="item.value"
-                  >
+                    :value="item.value">
                   </el-option>
                 </el-select>
               </div>
@@ -79,7 +77,7 @@
           <el-form-item label="缩略图" prop="articleImgurl">
             <!-- <el-upload
               class="avatar-uploader"
-              
+
               :action="uploadUrl"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
@@ -220,24 +218,7 @@ export default {
       //相关专辑
       options: [],
       // 文章分类
-      advLocations: [
-        // {
-        //   value: "",
-        //   label: "请选择文章分类",
-        // },
-        // {
-        //   value: "1",
-        //   label: "乐讯",
-        // },
-        // {
-        //   value: "2",
-        //   label: "碟评",
-        // },
-        // {
-        //   value: "3",
-        //   label: "闲话发烧",
-        // },
-      ],
+      advLocations: [],
       // 标签
       articleTag: [],
       imageUrl: "", //图片地址

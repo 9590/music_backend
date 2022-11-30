@@ -35,27 +35,6 @@
               "
             ></el-input>
           </el-form-item>
-          <el-form-item label="轮播图" prop="shopImgs">
-            <el-upload
-            :headers="headers"
-              :action="uploadUrl"
-              list-type="picture-card"
-              :on-success="handlePictureCardPreview"
-              :on-remove="handleRemove"
-              :limit="10"
-              :file-list="ruleForm.shopImgs"
-              :show-file-list="true"
-            >
-              <i class="el-icon-plus"></i>
-              <div class="el-upload__tip" slot="tip" style="font-weight: bold">
-                建议尺寸大小为320*640,图片不超过10张
-              </div>
-            </el-upload>
-
-            <el-dialog :visible.sync="dialogVisible">
-              <img width="100%" :src="ruleForm.shopImgs" alt="" />
-            </el-dialog>
-          </el-form-item>
           <el-form-item label="选择分类" prop="classifyName">
             <el-select
               class="card2-input"
@@ -78,6 +57,57 @@
               placeholder="输入价格"
               @input="priceChange"
             ></el-input>
+          </el-form-item>
+          <el-form-item label="轮播图" prop="shopImgs">
+            <el-upload
+            :headers="headers"
+              :action="uploadUrl"
+              list-type="picture-card"
+              :on-success="handlePictureCardPreview"
+              :on-remove="handleRemove"
+              :limit="10"
+              :file-list="ruleForm.shopImgs"
+              :show-file-list="true"
+            >
+              <i class="el-icon-plus"></i>
+              <div class="el-upload__tip" slot="tip" style="font-weight: bold">
+                建议尺寸大小为320*640,图片不超过10张
+              </div>
+            </el-upload>
+
+            <el-dialog :visible.sync="dialogVisible">
+              <img width="100%" :src="ruleForm.shopImgs" alt="" />
+            </el-dialog>
+          </el-form-item>
+          <el-form-item label="添加视频" prop="videoUrl">
+            <el-upload
+              :headers="headers"
+              class="avatar-uploader el-upload--text"
+              :action="uploadUrl"
+              :data="{fileType:fileType}"
+              :show-file-list="false"
+              :on-success="handleVideoSuccess"
+              :before-upload="beforeUploadVideo"
+              :on-remove="handleRemoves">
+              <video
+                v-if="ruleForm.videoUrl != [] && videoFlag == false"
+                src=""
+                class="avatar"
+                controls="controls"
+              >
+                您的浏览器不支持视频播放
+              </video>
+              <i
+                v-else-if="ruleForm.videoUrl == [] && videoFlag == false"
+                class="el-icon-plus avatar-uploader-icon"
+              ></i>
+              <el-progress
+                v-if="videoFlag == true"
+                type="circle"
+                :percentage="videoUploadPercent"
+                style="margin-top: 30px"
+              ></el-progress>
+            </el-upload>
           </el-form-item>
           <el-form-item label="添加内容" prop="shopContent">
             <quill-editor
@@ -120,6 +150,9 @@ import Cookies from "js-cookie";
 export default {
   data() {
     return {
+      videoUploadPercent: 0,
+      fileType:'jpg',
+      videoFlag: false,
       uploadUrl: process.env.VUE_APP_BASE_API + "/system/album/addImg", // 上传的图片服务器地址
       headers: {
         Authorization: Cookies.get("Admin-Token")
@@ -171,6 +204,60 @@ export default {
     this.manEdit(this.$route.params.id);
   },
   methods: {
+    // 添加视频
+    handleVideoCardPreview(file) {
+      console.log("file", file);
+      if (file.code == 200) {
+        delete file.code;
+        delete file.msg;
+        delete file.fileName;
+        this.ruleForm.videoUrl.push(file);
+      }
+      console.log("this.ruleForm.videoUrl", this.ruleForm.videoUrl);
+      this.dialogVisible = false;
+    },
+    beforeUploadVideo(file) {
+      const isLt10M = file.size / 1024 / 1024 < 20;
+      if (
+        [
+          "video/mp4",
+          "video/ogg",
+          "video/flv",
+          "video/avi",
+          "video/wmv",
+          "video/rmvb",
+        ].indexOf(file.type) == -1
+      ) {
+        this.$message.error("请上传正确的视频格式");
+        return false;
+      }
+      if (!isLt10M) {
+        this.$message.error("上传视频大小不能超过20MB哦!");
+        return false;
+      }
+    },
+    handleVideoSuccess(res, file) {
+      //获取上传视频地址
+      this.videoFlag = false;
+      this.videoUploadPercent = 0;
+      if (res.code == 200) {
+        this.videoUrl = res.url;
+        this.ruleForm.videoUrl.push({ url: res.url });
+      } else {
+        this.$message.error("添加视频失败，请重新上传！");
+      }
+    },
+    //视频移除
+    handleRemoves(file) {
+      console.log("file", file);
+      let s = file.response;
+      for (var i = 0; i <= this.ruleForm.videoUrl.length; i++) {
+        if (this.ruleForm.videoUrl[i] === s) {
+          this.ruleForm.videoUrl.splice(i, 1);
+        }
+      }
+    },
+
     //价格
     priceChange() {
       this.ruleForm.shopPrice = this.ruleForm.shopPrice.replace(/[^\d\.]/g, "");

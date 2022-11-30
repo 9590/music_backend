@@ -219,9 +219,9 @@ export default {
         });
         setTimeout(() => {
           this.$router.push({
-            path: "/all/userss",
+            path: "/all/userss/index",
           });
-        }, 1000);
+        }, 500);
       }
     },
     //进入界面回显省市数据

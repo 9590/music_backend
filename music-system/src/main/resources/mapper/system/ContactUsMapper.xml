@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.guoguoyun.system.mapper.ContactUsMapper">
-    
+
     <resultMap type="ContactUs" id="ContactUsResult">
         <result property="id"    column="id"    />
         <result property="createBy"    column="create_by"    />
@@ -20,17 +20,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectContactUsList" parameterType="ContactUs" resultMap="ContactUsResult">
         <include refid="selectContactUsVo"/>
-        <where>  
-            <if test="type != null "> and type = #{type}</if>
+        <where>
+            <if test="type != null "> and type = 3</if>
         </where>
         ORDER BY create_time DESC
     </select>
-    
+
     <select id="selectContactUsById" parameterType="Long" resultMap="ContactUsResult">
         <include refid="selectContactUsVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertContactUs" parameterType="ContactUs">
         insert into contact_us
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -71,7 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteContactUsByIds" parameterType="String">
-        delete from contact_us where id in 
+        delete from contact_us where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

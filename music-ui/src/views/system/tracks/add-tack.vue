@@ -136,14 +136,13 @@
             <el-checkbox-group v-model="song.songPre">
               <el-checkbox label="SQ" name="songPre" disabled></el-checkbox>
               <el-checkbox label="UPM" name="songPre" disabled></el-checkbox>
-              <!-- <el-checkbox label="VIP" name="type"></el-checkbox> -->
             </el-checkbox-group>
           </el-form-item>
 
           <el-form-item label="上传SQ音频" prop="sqUrl"
-            ><span style="color: #975252"
-              >(高格式MP3文件，上传成功后SQ自动打钩，原文件将被覆盖)</span
-            >
+          ><span style="color: #975252"
+          >(高格式MP3文件，上传成功后SQ自动打钩，原文件将被覆盖)</span
+          >
             <el-upload
               class="upload-demo"
               action="uploadFile"
@@ -159,12 +158,12 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="上传UPM音频" prop="upmUrl"
-            ><span style="color: #975252"
-              >(flac文件，上传成功后UPM自动打钩，原文件将被覆盖)</span
-            >
+          ><span style="color: #975252"
+          >(flac文件，上传成功后UPM自动打钩，原文件将被覆盖)</span
+          >
             <el-upload
               class="upload-demo"
-              :action="uploadFile"
+              action=""
               :http-request="httpRequestUpm"
               v-model="ruleForm.upmUrl"
               :on-success="handleAvatarSuccess2"
@@ -181,7 +180,8 @@
               class="card2-btn"
               type="primary"
               @click="submitForm('ruleForm')"
-              >保存</el-button
+            >保存
+            </el-button
             >
             <!-- <el-button class="card2-btn" @click="resetForm('ruleForm')"
               >重置</el-button
@@ -194,12 +194,13 @@
 </template>
 
 <script>
-import { add } from "@/api/tracks/tracks";
-import { addImg } from "@/api/album/album";
+import {add} from "@/api/tracks/tracks";
+import {addImg} from "@/api/album/album";
+
 export default {
   data() {
     return {
-      uploadFile: process.env.VUE_APP_BASE_API + "/common/upload",
+      // uploadFile: process.env.VUE_APP_BASE_API + "/common/upload",
       options: [
         {
           value: "艺人1",
@@ -218,6 +219,8 @@ export default {
       song: {
         songPre: [],
       },
+      songPreSQ: ['SQ'],
+      songPreUPM: ['UPM'],
       ruleForm: {
         songName: "",
         songEnglistName: "",
@@ -241,15 +244,15 @@ export default {
         //  { required: true, message: "请输入乐曲价格", trigger: "change" },
         // ],
         songName: [
-          { required: true, message: "请输入乐曲名称", trigger: "change" },
+          {required: true, message: "请输入乐曲名称", trigger: "change"},
         ],
         // songTimeMin: [
         //  { required: true, message: "请输入乐曲时长", trigger: "change" },
         // ],
         songNumber: [
-          { required: true, message: "请输入乐曲编号", trigger: "change" },
+          {required: true, message: "请输入乐曲编号", trigger: "change"},
         ],
-        time: [{ required: true, message: "请选择时间", trigger: "change" }],
+        time: [{required: true, message: "请选择时间", trigger: "change"}],
         //  sqUrl: [
         //   { required: true, message: '请选择本地乐曲', trigger: 'change' },
         // ],
@@ -274,7 +277,8 @@ export default {
       addImg(formData).then((res) => {
         console.log(res);
         this.ruleForm.sqUrl = res.data;
-        // this.dialogImageUrl = res.data;
+        this.dialogImageUrl = res.data;
+        this.song.songPre = this.songPreSQ
       });
     },
     beforeUploadSq(file) {
@@ -311,8 +315,12 @@ export default {
       console.log(formData);
       addImg(formData).then((res) => {
         console.log(res);
+
         this.ruleForm.upmUrl = res.data;
-        // this.dialogImageUrl = res.data;
+        this.dialogImageUrl = res.data;
+        this.song.songPre = this.songPreUPM
+
+
       });
     },
     async submitForm(formName) {
@@ -379,21 +387,12 @@ export default {
     linkDownload(url) {
       window.open(url, "_bank");
     },
-    // resetForm(formName) {
-    //   this.$refs[formName].resetFields();
-    // },
-    // handleRemove(file, fileList) {
-    //   console.log(file, fileList);
-    // },
-    // handlePictureCardPreview(file) {
-    //   this.dialogImageUrl = file.url;
-    //   this.dialogVisible = true;
-    // },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+
 .advertisement {
   .box-card {
     .card1 {
@@ -403,23 +402,25 @@ export default {
       padding-left: 10px;
       border-left: 5px solid orange;
     }
+
     .card2 {
       .card2-input {
         width: 400px;
       }
+
       .card2-input2 {
         width: 80px;
       }
+
       .card2-input3 {
         width: 100px;
       }
-      // .card2-input1{
-      //     width: 550px;
-      // }
+
       .card2-btn {
         width: 100px;
         margin-right: 30px;
       }
+
       .upload-demo {
         .el-upload__text {
         }
