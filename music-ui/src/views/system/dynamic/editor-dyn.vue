@@ -225,13 +225,15 @@ export default {
       });
     },
     handleVideoSuccess(res, file) {
+    
       //获取上传图片地址
       this.videoFlag = false;
       this.videoUploadPercent = 0;
       if (res.code == 200) {
-        this.videoUrl = res.url;
+        console.log(res)
+        this.videoUrl = res.data;
         this.ruleForm.videoUrl = [];
-        this.ruleForm.videoUrl.push({ url: res.url });
+        this.ruleForm.videoUrl.push({ url: res.data });
       } else {
         this.$message.error("添加视频失败，请重新上传！");
       }
@@ -268,9 +270,14 @@ export default {
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
-    },
-    handleRemoves(file, fileList) {
-      console.log(file, fileList);
+      console.log("file", file);
+      let s = file.url;
+      for (var i = 0; i <= this.ruleForm.imgUrls.length; i++) {
+        console.log(this.ruleForm.imgUrls[i],s)
+        if (this.ruleForm.imgUrls[i].url === s) {
+          this.ruleForm.imgUrls.splice(i, 1);
+        }
+      }
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.data;

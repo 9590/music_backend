@@ -79,8 +79,9 @@
           <el-form-item label="头像" prop="userAvatar" class="card2-el">
             <!-- :headers="headers" -->
             <el-upload
-            :headers="headers"
+              :headers="headers"
               v-model="ruleForm.userAvatar"
+              :data="{fileType:null}"
               class="avatar-uploader"
               :action="uploadUrl"
               :show-file-list="false"
@@ -127,7 +128,7 @@ export default {
       // 头像上传
       uploadUrl: process.env.VUE_APP_BASE_API + "/system/album/addImg", // 上传的图片服务器地址
       headers: {
-        Authorization: Cookies.get("Admin-Token")
+        Authorization: Cookies.get("Admin-Token"),
       },
       imageUrl: "", //图片地址
       //    性别
@@ -234,6 +235,7 @@ export default {
         url: url,
         method: "get",
         params: params,
+        headers: this.headers,
       }).then((res) => {
         resolve(
           res.data.data.map((val) => {
@@ -247,8 +249,8 @@ export default {
       });
     },
     handleAvatarSuccess(res, file) {
-      this.imageUrl = res.url;
-      this.ruleForm.userAvatar = res.url;
+      this.imageUrl = res.data;
+      this.ruleForm.userAvatar = res.data;
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";

@@ -174,8 +174,9 @@ export default {
       console.log(formData);
       addImg(formData).then((res) => {
         console.log(res);
-        this.ruleForm.imgUrl = res.data;
+        // this.ruleForm.imgUrl = res.data;
         this.dialogImageUrl = res.data;
+        this.imgUrlList = [{url:res.data}];
       });
     },
     // 封面图片
@@ -183,7 +184,7 @@ export default {
       console.log(res.data, file);
       this.dialogImageUrl = URL.createObjectURL(file.raw);
       this.dialogImageUrl = file.response.url;
-      this.ruleForm.imgUrl = res.data;
+      // this.ruleForm.imgUrl = res.data;
     },
     beforeAvatarUpload(file) {
       const littleName = file.name.toLowerCase();
@@ -295,6 +296,7 @@ export default {
       this.ruleForm = data;
       this.tags = data.albums ? data.albums : [];
       this.fileList = data.imgUrlList;
+      this.dialogImageUrl = data.imgUrlList[0].url
       let res = [];
       for (let key in data.imgUrlList) {
         res.push({

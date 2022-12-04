@@ -87,6 +87,8 @@
             <!-- :headers="headers" -->
             <el-upload
               v-model="ruleForm.userAvatar"
+              :headers="headers"
+              :data="{fileType:null}"
               class="avatar-uploader"
               :action="uploadUrl"
               :show-file-list="false"
@@ -126,6 +128,7 @@
 
 <script>
 import axios from "axios";
+import Cookies from "js-cookie";
 import {
   listUser,
   getUser,
@@ -147,7 +150,10 @@ export default {
       modalKey: 0,
       imageUrl: "",
       // 头像上传
-      uploadUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      uploadUrl: process.env.VUE_APP_BASE_API + "/system/album/addImg", // 上传的图片服务器地址
+      headers: {
+        Authorization: Cookies.get("Admin-Token")
+      },
       //选择地区
       adressArray: ["", ""],
       adressProps: {
@@ -188,9 +194,9 @@ export default {
   },
   methods: {
     handleAvatarSuccess(res, file) {
-      this.imageUrl = res.url;
+      this.imageUrl = res.data;
       // this.ruleForm.userAvatar = res.fileName;
-      this.ruleForm.userAvatar = res.url;
+      this.ruleForm.userAvatar = res.data;
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
@@ -270,6 +276,7 @@ export default {
         url: url,
         method: "get",
         params: params,
+        headers:this.headers
       }).then((res) => {
         resolve(
           res.data.data.map((val) => {

@@ -80,6 +80,7 @@
             :headers="headers"
               v-model="ruleForm.userAvatar"
               class="avatar-uploader"
+              :data="{fileType:null}"
               :action="uploadUrl"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
@@ -274,6 +275,7 @@ export default {
         url: url,
         method: "get",
         params: params,
+        headers: this.headers,
       }).then((res) => {
         resolve(
           res.data.data.map((val) => {
@@ -299,8 +301,9 @@ export default {
       this.getAdress();
     },
     handleAvatarSuccess(res, file) {
-      this.ruleForm.userAvatar = res.url;
-      this.imageUrl = process.env.VUE_APP_BASE_API + res.fileName;
+      this.ruleForm.userAvatar = res.data;
+      this.imageUrl = res.data;
+      // this.imageUrl = process.env.VUE_APP_BASE_API + res.fileName;
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";

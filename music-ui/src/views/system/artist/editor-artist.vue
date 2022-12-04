@@ -39,6 +39,8 @@
             <el-upload
               class="avatar-uploader"
               :action="uploadUrl"
+              :headers="headers"
+              :data="{fileType:null}"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"
@@ -89,14 +91,18 @@
 <script>
 import { userList } from "@/api/album/album";
 import { getActorInfo, updataActor } from "@/api/artist/artist";
+import Cookies from "js-cookie";
 export default {
   data() {
     return {
       opKey: 0,
       // 头像上传
-      uploadUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      uploadUrl: process.env.VUE_APP_BASE_API + "/system/album/addImg", // 上传的图片服务器地址
       dialogImageUrl: "",
       dialogVisible: false,
+      headers: {
+        Authorization: Cookies.get("Admin-Token")
+      },
       form: {
         userAccount: "",
         password: "",
@@ -193,8 +199,8 @@ export default {
       }
     },
     handleAvatarSuccess(res, file) {
-      this.dialogImageUrl = res.url;
-      this.form.userAvatar = res.url;
+      this.dialogImageUrl = res.data;
+      this.form.userAvatar = res.data;
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";

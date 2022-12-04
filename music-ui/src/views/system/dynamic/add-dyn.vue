@@ -195,7 +195,7 @@ export default {
         delete file.code;
         delete file.msg;
         delete file.fileName;
-        this.ruleForm.imgUrls.push(file);
+        this.ruleForm.imgUrls.push({ url: file.data });
         // this.ruleForm.videoUrl.push(file);
       }
       // console.log("this.ruleForm.imgUrls", this.ruleForm.imgUrls);
@@ -209,7 +209,7 @@ export default {
         delete file.code;
         delete file.msg;
         delete file.fileName;
-        this.ruleForm.videoUrl.push(file);
+        this.ruleForm.videoUrl.push({ url: res.data });
       }
       console.log("this.ruleForm.videoUrl", this.ruleForm.videoUrl);
       this.dialogVisible = false;
@@ -236,22 +236,25 @@ export default {
     },
 
     handleVideoSuccess(res, file) {
+      console.log(res, file)
       //获取上传视频地址
       this.videoFlag = false;
       this.videoUploadPercent = 0;
       if (res.code == 200) {
-        this.videoUrl = res.url;
-        this.ruleForm.videoUrl.push({ url: res.url });
+        this.videoUrl = res.data;
+        this.ruleForm.videoUrl.push({ url: res.data });
       } else {
         this.$message.error("添加视频失败，请重新上传！");
       }
     },
     // 图片移除
     handleRemove(file) {
+      console.log(file, fileList);
       console.log("file", file);
-      let s = file.response;
+      let s = file.url;
       for (var i = 0; i <= this.ruleForm.imgUrls.length; i++) {
-        if (this.ruleForm.imgUrls[i] === s) {
+        console.log(this.ruleForm.imgUrls[i],s)
+        if (this.ruleForm.imgUrls[i].url === s) {
           this.ruleForm.imgUrls.splice(i, 1);
         }
       }

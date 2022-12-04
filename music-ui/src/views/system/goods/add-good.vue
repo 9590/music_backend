@@ -90,7 +90,7 @@
               :on-remove="handleRemoves">
               <video
                 v-if="ruleForm.videoUrl != [] && videoFlag == false"
-                src=""
+                :src="videoUrl"
                 class="avatar"
                 controls="controls"
               >
@@ -157,6 +157,7 @@ export default {
       input2: "",
       options: [], //分类
       classifyType: 1,
+      videoUrl:[],
       ruleForm: {
         shopName: "", //商品名称
         shopNumber: "", //商品编号
@@ -167,6 +168,7 @@ export default {
         shopIsTop: "", //是否顶置
         shopUrl: "", //购买链接
         // content:'',
+        videoUrl:[]
       },
       rules: {
         shopName: [
@@ -236,8 +238,9 @@ export default {
       this.videoFlag = false;
       this.videoUploadPercent = 0;
       if (res.code == 200) {
-        this.videoUrl = res.url;
-        this.ruleForm.videoUrl.push({ url: res.url });
+        this.videoUrl = res.data;
+        this.ruleForm.videoUrl = [];
+        this.ruleForm.videoUrl.push({ url: res.data });
       } else {
         this.$message.error("添加视频失败，请重新上传！");
       }
@@ -269,16 +272,16 @@ export default {
         delete file.code;
         delete file.msg;
         delete file.fileName;
-        this.ruleForm.shopImgs.push(file);
+        this.ruleForm.shopImgs.push({ url: file.data });
       }
       // console.log('上传数组',this.ruleForm.shopImgs);
       this.dialogVisible = false;
     },
     //  图片移除
     handleRemove(file) {
-      let s = file.response;
+      let s = file.url;
       for (var i = 0; i <= this.ruleForm.shopImgs.length; i++) {
-        if (this.ruleForm.shopImgs[i] === s) {
+        if (this.ruleForm.shopImgs[i].url === s) {
           this.ruleForm.shopImgs.splice(i, 1);
         }
       }
@@ -300,6 +303,7 @@ export default {
         shopContent: this.ruleForm.shopContent, //富文本内容
         shopIsTop: this.ruleForm.shopIsTop, //是否顶置
         shopUrl: this.ruleForm.shopUrl, //购买链接
+        videoUrl:this.ruleForm.videoUrl
       });
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
