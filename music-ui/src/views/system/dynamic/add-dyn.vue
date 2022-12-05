@@ -100,7 +100,7 @@
                 v-if="ruleForm.videoUrl != [] && videoFlag == false"
                 :src="videoUrl"
                 class="avatar"
-                controls="controls"
+                style="width:100%;height:100%" id="videoBox" controls="controls" ref="videoPlay"
               >
                 您的浏览器不支持视频播放
               </video>
@@ -173,6 +173,13 @@ export default {
     this.UserDynList(); //艺人信息
   },
   methods: {
+    videoImg: function (){
+      this.plays=false;
+      this.$refs["videoPlay"].play();
+      },
+
+
+
     beforeUpload(file){
       let fileNameLen = file.name.split(".").length;
       this.fileType=file.name.split(".")[fileNameLen - 1]

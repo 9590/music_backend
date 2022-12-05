@@ -70,21 +70,7 @@
               <img width="100%" :src="ruleForm.shopImgs" alt="" />
             </el-dialog> -->
           </el-form-item>
-          <!-- <el-form-item label="添加视频" prop="videoUrl">
-            <el-upload
-              :action="uploadUrl"
-              accept=".MP4,.AVI,.rm,.wmv"
-              list-type="picture-card"
-              :on-success="handleVideoCardPreview"
-              :on-remove="handleRemoves"
-              v-model="ruleForm.videoUrl"
-            >
-              <i class="el-icon-plus"></i>
-            </el-upload>
-            <el-dialog :visible.sync="dialogVisible">
-              <video width="100%" :src="ruleForm.videoUrl" alt="" />
-            </el-dialog>
-          </el-form-item> -->
+
           <el-form-item label="添加视频" prop="videoUrl">
             <!-- action必选参数, 上传的地址 -->
             <el-upload
@@ -96,7 +82,7 @@
               :on-success="handleVideoSuccess"
               :before-upload="beforeUploadVideo"
               :on-remove="handleRemoves"
-              
+
             >
               <video
                 v-if="ruleForm.videoUrl != [] && videoFlag == false"
@@ -209,7 +195,7 @@ export default {
       });
     },
     submitForm(formName) {
-      
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.editDynList();
@@ -225,7 +211,7 @@ export default {
       });
     },
     handleVideoSuccess(res, file) {
-    
+
       //获取上传图片地址
       this.videoFlag = false;
       this.videoUploadPercent = 0;

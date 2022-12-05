@@ -112,14 +112,14 @@ export default {
           value: 3,
           label: "商城轮播图",
         },
-        {
-          value: 4,
-          label: "乐讯",
-        },
-        {
-          value: 5,
-          label: "发烧乐园",
-        },
+        // {
+        //   value: 4,
+        //   label: "乐讯",
+        // },
+        // {
+        //   value: 5,
+        //   label: "发烧乐园",
+        // },
       ],
       imageUrl: "", //图片地址
       ruleForm: {

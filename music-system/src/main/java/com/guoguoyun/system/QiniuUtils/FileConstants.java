@@ -13,19 +13,69 @@ public class FileConstants {
     public static final String THERE = "there";
 
     /**
-     * MP3路径
+     * 1.广告---图保存位置
+     */
+    public static final String ADVERT_IMAGE_PATH = "files/advert/";
+
+    /**
+     * 2.专辑---MP3路径
      */
     public static final String MP3_FILE_PATH = "files/album/audio/";
 
     /**
-     * 图片路径
+     * 2.专辑---图片路径
      */
     public static final String JPG_FILE_PATH = "files/album/cover/";
 
     /**
-     * 广告图保存位置
+     * 3.曲目---MP3、flac
      */
-    public static final String ADVERT_IMAGE_PATH = "files/advert/";
+    public static final String SONG_MP3_FILE_PATH = "files/song/cover/";
+
+    /**
+     * 4.文章--图
+     */
+    public static final String TEXT_IMG_FILE_PATH = "files/text/cover/";
+
+    /**
+     * 5.投稿--图
+     */
+    public static final String CONTR_IMG_FILE_PATH = "files/contr/cover/";
+
+    /**
+     * 6.动态管理--图
+     */
+    public static final String DYNAMIC_IMG_FILE_PATH = "files/dynamic/cover/";
+
+    /**
+     * 6.动态管理--视频
+     */
+    public static final String TEXT_AUDIO_FILE_PATH = "files/dynamic/audio/";
+
+    /**
+     * 7.商品--图
+     */
+    public static final String SHOP_IMG_FILE_PATH = "files/shop/cover/";
+
+    /**
+     * 7.商品--视频
+     */
+    public static final String SHOP_AUDIO_FILE_PATH = "files/shop/audio/";
+
+    /**
+     * 8.会员管理--图
+     */
+    public static final String MEMBER_MP3_FILE_PATH = "files/member/cover/";
+    /**
+     * 9.艺术家管理--图
+     */
+    public static final String ART_IMG_FILE_PATH = "files/artist/cover/";
+    /**
+     * 9.APK
+     */
+    public static final String APK_IMG_FILE_PATH = "files/apk/";
+
+
 
     /**
      * 文件未指定默认保存位置

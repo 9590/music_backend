@@ -63,7 +63,7 @@ import { getToken } from "@/utils/auth";
 export default {
   data() {
     return {
-      uploadUrl: process.env.VUE_APP_BASE_API + "/common/uploadApk",
+      uploadUrl: process.env.VUE_APP_BASE_API + "/system/album/addImg",
       headers: {
         Authorization: "Bearer " + getToken(),
       },

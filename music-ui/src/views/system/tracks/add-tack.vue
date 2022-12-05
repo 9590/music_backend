@@ -309,6 +309,7 @@ export default {
       let fileNameLen = file.file.name.split(".").length;
       let formData = new FormData();
       formData.append("file", file.file);
+      formData.append("fileName", file.name);
       formData.append("fileType", file.file.name.split(".")[fileNameLen - 1]);
       formData.append("updatePath", "two");
 

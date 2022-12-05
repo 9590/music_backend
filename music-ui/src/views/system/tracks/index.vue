@@ -224,7 +224,6 @@ export default {
     handleSizeChange(val) {
       this.queryParams.pageSize = val;
       this.getList();
-      // console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
       this.queryParams.pageNum = val;
